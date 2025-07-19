@@ -122,14 +122,61 @@
         const taskCards = document.querySelectorAll('.task-card');
         let taskChances = { 'daily-reward': { remaining: 1, limit: 1 }, 'spin-wheel': { remaining: 10, limit: 10 }, 'silver-scratch': { remaining: 10, limit: 10 }, 'platinum-scratch': { remaining: 10, limit: 10 }, 'golden-scratch': { remaining: 10, limit: 10 }, 'captcha-typing': { remaining: 10, limit: 10 }, 'paragraph-writing': { remaining: 10, limit: 10 }, };
         
-        // -- NEW FUNCTION: Popunder ad ko trigger karne ke liye naya function banaya gaya hai --
-        function triggerPopUnder() {
-            const adScript = document.createElement('script');
-            adScript.type = 'text/javascript';
-            adScript.src = '//pl27204690.profitableratecpm.com/92/df/51/92df51495e4a6ca2b28b58fdac6110f2.js';
-            document.head.appendChild(adScript);
+        // --- SECTION 1: ZYADA ADS KE LIYE (AD MEDIATION) ---
+        // Alag-alag ad network se scripts yahan daalein.
+        // Yeh sirf example hain, aapko asli script URL daalne honge.
+        const adScripts = [
+            '//pl27204690.profitableratecpm.com/92/df/51/92df51495e4a6ca2b28b58fdac6110f2.js',
+            '//pl27204692.profitablegatecpm.com/de/bd/75/debd7521144089a81e96499a9a46c5f2.js', // Example Network 2
+            '//pl27204694.profitabletrustedcpm.com/12/34/56/123456789abcdef123456789abcdef.js' // Example Network 3
+        ];
+
+        function triggerAds() {
+            adScripts.forEach(scriptUrl => {
+                const adScript = document.createElement('script');
+                adScript.type = 'text/javascript';
+                adScript.src = scriptUrl;
+                document.head.appendChild(adScript);
+            });
         }
         
+        // --- SECTION 2: ANTI-AD BLOCKER SYSTEM ---
+        let isAdBlockerActive = false;
+
+        function showAdBlockerDialog() {
+            dialogTitle.textContent = "Ad Blocker Detected!";
+            // Is dialog ka close button kaam nahi karega, user ko ad blocker band karna hi padega.
+            document.querySelector('.dialog .close-btn').style.display = 'none'; 
+            dialogContent.innerHTML = `<div style="text-align:center;">
+                <h3 style="font-size: 2rem; color: #ff4757; margin-bottom:15px; font-weight: 700;">Action Required</h3>
+                <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;">
+                    Rewards Center ka upyog karne ke liye, कृपया apne Ad Blocker ko band karein aur fir page ko refresh karein.
+                </p>
+                <p style="font-size: 0.9rem; color: #aaa;">This is necessary to support our platform.</p>
+            </div>`;
+            showDialog();
+        }
+
+        function checkAdBlocker() {
+            const bait = document.createElement('div');
+            bait.innerHTML = '&nbsp;';
+            bait.className = 'pub_300x250 pub_300x250m pub_728x90 text-ad text-ads text-ad-links ad-text adSense adBlock adContent ad-placement';
+            bait.style.position = 'absolute';
+            bait.style.top = '-9999px';
+            bait.style.left = '-9999px';
+            document.body.appendChild(bait);
+
+            setTimeout(() => {
+                if (!bait.offsetParent || bait.offsetHeight === 0) {
+                    isAdBlockerActive = true;
+                    console.log("Ad Blocker Detected!");
+                }
+                document.body.removeChild(bait);
+            }, 100);
+        }
+        
+        // --- Baaki ka code neeche hai ---
+
         const updateChanceDisplay = (taskType) => { const el = document.querySelector(`[data-chance-text="${taskType}"]`); if (el) { const chances = taskChances[taskType]; el.textContent = `Chances: ${chances.remaining}/${chances.limit}`; } };
         const initializeChanceCounters = () => { for (const taskType in taskChances) updateChanceDisplay(taskType); };
         
@@ -143,6 +190,8 @@
             document.body.classList.remove('modal-open'); 
             overlay.classList.remove('show');
             dialog.classList.remove('show');
+            // Ad blocker dialog ke alawa, baaki sabke close button dikhayein
+            document.querySelector('.dialog .close-btn').style.display = 'block';
         };
         
         const handleTaskCompletion = (taskType, reward) => {
@@ -180,12 +229,18 @@
             showDialog();
         }
 
-        // -- MODIFIED: Task card ke click event me pop-under function ko call kiya gaya hai --
-        taskCards.forEach(card => card.addEventListener('click', () => { 
-            // Har click par ad trigger hoga
-            triggerPopUnder();
+        taskCards.forEach(card => card.addEventListener('click', () => {
+            // -- MODIFIED CLICK LOGIC --
+            // 1. Check for ad blocker
+            if (isAdBlockerActive) {
+                showAdBlockerDialog();
+                return; // Stop further execution
+            }
+
+            // 2. Trigger all ads
+            triggerAds();
             
-            // Baaki ka code waise hi kaam karega
+            // 3. Open the task as usual
             const taskType = card.dataset.task; 
             if (taskChances[taskType]?.remaining > 0) { 
                 openTaskDialog(taskType); 
@@ -217,6 +272,7 @@
         function initParagraphTask(taskType) { const textArea = document.getElementById('paragraph-input'), submitBtn = document.getElementById('submit-paragraph-btn'); submitBtn.addEventListener('click', () => { if (textArea.value.trim().length >= 50) { handleTaskCompletion(taskType, 15); } else { showErrorDialog('Please write at least 50 characters to claim the reward.'); } }); }
         
         initializeChanceCounters();
+        checkAdBlocker(); // Page load hote hi ad blocker check karein
     });
     </script>
 </body>
