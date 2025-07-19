@@ -1,190 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Rewards Center</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rewards Center</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-    .rewards-container {
-      max-width: 500px;
-      margin: 20px auto;
-      padding: 15px;
-    }
+        :root {
+            --bg-color: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --font-color: #f0f0f0;
+            --primary-glow: rgba(0, 191, 255, 0.6);
+            --chance-color: #888;
+        }
 
-    .section-title {
-      font-size: 22px;
-      margin-bottom: 15px;
-      text-align: center;
-      color: #00ffe7;
-    }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    .task-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--font-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 10px 15px 25px;
+        }
+        
+        body.modal-open {
+            overflow: hidden;
+        }
 
-    .task-card {
-      background-color: #111;
-      border: 1px solid #333;
-      border-radius: 14px;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 0 8px #0ff2;
-      transition: transform 0.2s ease;
-      cursor: pointer;
-    }
+        .container { width: 100%; max-width: 1200px; }
+        
+        .main-heading { 
+            text-align: center; 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            margin-bottom: 35px;
+            background: linear-gradient(90deg, #00BFFF, #1E90FF, #8A2BE2); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
 
-    .task-card:hover {
-      transform: scale(1.03);
-    }
+        .main-heading::after {
+            content: '';
+            display: block;
+            width: 100px; 
+            height: 2px;  
+            background-color: #444; 
+            margin: 10px auto 0; 
+            border-radius: 2px;
+        }
 
-    .task-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .task-limit {
-      font-size: 14px;
-      color: #aaa;
-    }
-
-    /* Dialog box */
-    .dialog-overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-
-    .dialog-box {
-      background-color: #111;
-      border-radius: 14px;
-      padding: 20px;
-      width: 85%;
-      max-width: 350px;
-      text-align: center;
-      border: 1px solid #00ffe7;
-    }
-
-    .dialog-title {
-      font-size: 20px;
-      margin-bottom: 10px;
-      color: #00ffe7;
-    }
-
-    .dialog-content {
-      font-size: 16px;
-      margin-bottom: 20px;
-      color: #fff;
-    }
-
-    .dialog-close {
-      padding: 10px 20px;
-      border: none;
-      background-color: #00ffe7;
-      color: #000;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .dialog-close:hover {
-      background-color: #0ff;
-    }
-  </style>
+        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .task-card { background: var(--card-bg); border-radius: 20px; padding: 20px; cursor: pointer; position: relative; overflow: hidden; border: 1px solid #333; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; align-items: center; gap: 20px; }
+        .task-card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow); border-color: var(--primary-glow); }
+        .task-card .icon { font-size: 2.5rem; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; border-radius: 15px; flex-shrink: 0; color: white; }
+        .icon.daily-reward { background: linear-gradient(135deg, #f7b733, #fc4a1a); }
+        .icon.spin-wheel { background: linear-gradient(135deg, #8A2BE2, #4A00E0); }
+        .icon.silver-scratch { background: linear-gradient(135deg, #c0c0c0, #a9a9a9); }
+        .icon.platinum-scratch { background: linear-gradient(135deg, #e5e4e2, #a7b4be); }
+        .icon.golden-scratch { background: linear-gradient(135deg, #ffd700, #f0c24a); }
+        .icon.captcha { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .icon.paragraph { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+        .task-info { flex-grow: 1; }
+        .task-info h3 { font-size: 1.2rem; font-weight: 600; color: #fff; }
+        .task-info p { font-size: 0.9rem; color: #aaa; }
+        .chances { font-size: 0.8rem; color: var(--chance-color); margin-top: 5px; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        .dialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%) scale(0.95); background: #202020; border-radius: 24px; padding: 0; z-index: 1001; width: 90%; max-width: 480px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); border: 1px solid #444; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); overflow: hidden; }
+        .overlay.show, .dialog.show { opacity: 1; visibility: visible; }
+        .dialog.show { transform: translate(-50%, -50%) scale(1); }
+        .dialog-header { padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); }
+        .dialog-header h2 { font-size: 1.6rem; color: #fff; }
+        .close-btn { font-size: 2.5rem; font-weight: 300; color: #aaa; cursor: pointer; transition: color 0.2s, transform 0.3s; }
+        .close-btn:hover { color: #fff; transform: rotate(90deg); }
+        .dialog-content { padding: 30px 25px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #scratch-container { position: relative; width: 100%; max-width: 350px; height: 150px; margin: 20px auto; border-radius: 10px; cursor: grab; }
+        #scratch-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #scratch-prize { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; background: radial-gradient(circle, #4a4e69 0%, #22223b 100%); color: white; font-size: 1.5rem; font-weight: 600; border-radius: 10px; }
+        #wheel-container { position: relative; width: 300px; height: 300px; margin-bottom: 20px; }
+        #wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 5s cubic-bezier(0.25, 1, 0.5, 1); position: relative; border: 5px solid #333; background-image: conic-gradient( from -20deg, #EC407A 0deg 40deg, #AB47BC 40deg 80deg, #7E57C2 80deg 120deg, #5C6BC0 120deg 160deg, #42A5F5 160deg 200deg, #29B6F6 200deg 240deg, #26A69A 240deg 280deg, #66BB6A 280deg 320deg, #FFA726 320deg 360deg ); }
+        #wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid #fff; z-index: 10; }
+        .segment-label { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; color: white; font-weight: 700; font-size: 1.5rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; transform: rotate(20deg) translateX(-25%); }
+        #captcha-container { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
+        #captcha-text { background-color: #333; padding: 10px 20px; border-radius: 8px; font-size: 1.8rem; font-weight: 700; letter-spacing: 5px; user-select: none; text-decoration: line-through; font-family: 'Courier New', Courier, monospace; }
+        .styled-input, .styled-textarea { width: 100%; padding: 12px; background-color: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: var(--font-color); font-size: 1rem; margin-top: 15px; margin-bottom: 20px; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .styled-textarea { min-height: 120px; resize: vertical; }
+        .btn-primary { background: linear-gradient(90deg, #1E90FF, #00BFFF); color: #fff; border: none; padding: 12px 30px; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(30, 144, 255, 0.5); }
+        .btn-primary:disabled { background: #555; cursor: not-allowed; transform: none; box-shadow: none; }
+    </style>
 </head>
 <body>
-  <div class="rewards-container">
-    <div class="section-title">🎁 Daily Reward Tasks</div>
-    <div class="task-grid">
-      <div class="task-card" data-task="watch-video">
-        <div class="task-title">Watch Video</div>
-        <div class="task-limit">3 chances left</div>
-      </div>
-      <div class="task-card" data-task="spin-wheel">
-        <div class="task-title">Spin the Wheel</div>
-        <div class="task-limit">2 chances left</div>
-      </div>
-      <div class="task-card" data-task="play-game">
-        <div class="task-title">Play Game</div>
-        <div class="task-limit">1 chance left</div>
-      </div>
-      <div class="task-card" data-task="survey">
-        <div class="task-title">Take Survey</div>
-        <div class="task-limit">1 chance left</div>
-      </div>
+    <div class="container">
+        <h1 class="main-heading">Rewards Center</h1>
+        <div class="task-grid">
+            <div class="task-card" data-task="daily-reward"><div class="icon daily-reward">🎁</div><div class="task-info"><h3>Daily Reward</h3><p>Claim your daily bonus</p><p class="chances" data-chance-text="daily-reward"></p></div></div>
+            <div class="task-card" data-task="spin-wheel"><div class="icon spin-wheel">🎡</div><div class="task-info"><h3>Spin Wheel</h3><p>Spin to win exciting prizes</p><p class="chances" data-chance-text="spin-wheel"></p></div></div>
+            <div class="task-card" data-task="silver-scratch"><div class="icon silver-scratch">🪙</div><div class="task-info"><h3>Silver Scratch</h3><p>Scratch for a silver prize</p><p class="chances" data-chance-text="silver-scratch"></p></div></div>
+            <div class="task-card" data-task="platinum-scratch"><div class="icon platinum-scratch">👑</div><div class="task-info"><h3>Platinum Scratch</h3><p>A premium card with better rewards</p><p class="chances" data-chance-text="platinum-scratch"></p></div></div>
+            <div class="task-card" data-task="golden-scratch"><div class="icon golden-scratch">🏆</div><div class="task-info"><h3>Golden Scratch</h3><p>The ultimate scratch card</p><p class="chances" data-chance-text="golden-scratch"></p></div></div>
+            <div class="task-card" data-task="captcha-typing"><div class="icon captcha">⌨️</div><div class="task-info"><h3>Captcha Typing</h3><p>Enter characters to earn</p><p class="chances" data-chance-text="captcha-typing"></p></div></div>
+            <div class="task-card" data-task="paragraph-writing"><div class="icon paragraph">✍️</div><div class="task-info"><h3>Paragraph Writing</h3><p>Write a short paragraph</p><p class="chances" data-chance-text="paragraph-writing"></p></div></div>
+        </div>
     </div>
-  </div>
-
-  <!-- Dialog -->
-  <div class="dialog-overlay" id="dialog">
-    <div class="dialog-box">
-      <div class="dialog-title" id="dialogTitle">Task</div>
-      <div class="dialog-content" id="dialogContent">You opened the task!</div>
-      <button class="dialog-close" onclick="closeDialog()">Close</button>
+    <div class="overlay"></div>
+    <div class="dialog">
+        <div class="dialog-header"><h2 id="dialog-title"></h2><span class="close-btn">&times;</span></div>
+        <div class="dialog-content" id="dialog-content"></div>
     </div>
-  </div>
-
-  <script>
-    const taskChances = {
-      'watch-video': { remaining: 3 },
-      'spin-wheel': { remaining: 2 },
-      'play-game': { remaining: 1 },
-      'survey': { remaining: 1 }
-    };
-
-    const taskCards = document.querySelectorAll('.task-card');
-    const dialog = document.getElementById('dialog');
-    const dialogTitle = document.getElementById('dialogTitle');
-    const dialogContent = document.getElementById('dialogContent');
-
-    function openDialog(title, content) {
-      dialogTitle.textContent = title;
-      dialogContent.textContent = content;
-      dialog.style.display = 'flex';
-    }
-
-    function closeDialog() {
-      dialog.style.display = 'none';
-    }
-
-    function triggerPopunderAd() {
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = '//pl27204690.profitableratecpm.com/92/df/51/92df51495e4a6ca2b28b58fdac6110f2.js';
-      document.body.appendChild(script);
-    }
-
-    taskCards.forEach(card => {
-      card.addEventListener('click', () => {
-        const taskType = card.dataset.task;
-        const task = taskChances[taskType];
-
-        triggerPopunderAd(); // ✅ Ad Trigger
-
-        if (task && task.remaining > 0) {
-          task.remaining--;
-          card.querySelector('.task-limit').textContent = `${task.remaining} chance${task.remaining !== 1 ? 's' : ''} left`;
-          openDialog(taskType.replace('-', ' ').toUpperCase(), 'You opened the task! Earn rewards after completing.');
-        } else {
-          openDialog('Limit Reached', 'You have used all chances for this task today.');
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const overlay = document.querySelector('.overlay');
+        const dialog = document.querySelector('.dialog');
+        const closeBtn = document.querySelector('.close-btn');
+        const dialogTitle = document.getElementById('dialog-title');
+        const dialogContent = document.getElementById('dialog-content');
+        const taskCards = document.querySelectorAll('.task-card');
+        let taskChances = { 'daily-reward': { remaining: 1, limit: 1 }, 'spin-wheel': { remaining: 10, limit: 10 }, 'silver-scratch': { remaining: 10, limit: 10 }, 'platinum-scratch': { remaining: 10, limit: 10 }, 'golden-scratch': { remaining: 10, limit: 10 }, 'captcha-typing': { remaining: 10, limit: 10 }, 'paragraph-writing': { remaining: 10, limit: 10 }, };
+        
+        // -- NEW FUNCTION: Popunder ad ko trigger karne ke liye naya function banaya gaya hai --
+        function triggerPopUnder() {
+            const adScript = document.createElement('script');
+            adScript.type = 'text/javascript';
+            adScript.src = '//pl27204690.profitableratecpm.com/92/df/51/92df51495e4a6ca2b28b58fdac6110f2.js';
+            document.head.appendChild(adScript);
         }
-      });
+        
+        const updateChanceDisplay = (taskType) => { const el = document.querySelector(`[data-chance-text="${taskType}"]`); if (el) { const chances = taskChances[taskType]; el.textContent = `Chances: ${chances.remaining}/${chances.limit}`; } };
+        const initializeChanceCounters = () => { for (const taskType in taskChances) updateChanceDisplay(taskType); };
+        
+        const showDialog = () => {
+            document.body.classList.add('modal-open'); 
+            overlay.classList.add('show');
+            dialog.classList.add('show');
+        };
+        
+        const closeDialog = () => {
+            document.body.classList.remove('modal-open'); 
+            overlay.classList.remove('show');
+            dialog.classList.remove('show');
+        };
+        
+        const handleTaskCompletion = (taskType, reward) => {
+            if (taskChances[taskType].remaining > 0) {
+                taskChances[taskType].remaining--;
+                updateChanceDisplay(taskType);
+                closeDialog();
+                setTimeout(() => showCompletionDialog(reward), 350);
+            }
+        };
+        
+        const showCompletionDialog = (reward) => {
+            dialogTitle.textContent = "Success!";
+            dialogContent.innerHTML = `<div style="text-align:center;"><h3 style="font-size: 2.2rem; color: #28a745; margin-bottom:15px; font-weight: 700;">Congratulations!</h3><p style="font-size: 1.2rem; margin-bottom: 30px;">You have earned <strong>${reward}</strong> coins.</p><button class="btn-primary" id="ok-btn">Awesome!</button></div>`;
+            document.getElementById('ok-btn').addEventListener('click', closeDialog);
+            showDialog();
+        };
+        const showLimitExceededDialog = () => {
+            dialogTitle.textContent = "Limit Reached";
+            dialogContent.innerHTML = `<p style="font-size: 1.2rem; line-height: 1.6;">Your chances for today are over.<br><br>Please try again tomorrow.</p>`;
+            showDialog();
+        };
+        const showErrorDialog = (message) => {
+            dialogTitle.textContent = "Oops! An Error Occurred";
+            dialogContent.innerHTML = `<div style="text-align:center;"><p style="font-size: 1.2rem; margin: 20px 0; color: #ff6b6b;">${message}</p><button class="btn-primary" id="error-ok-btn">OK</button></div>`;
+            document.getElementById('error-ok-btn').addEventListener('click', closeDialog);
+            showDialog();
+        };
+        
+        const openTaskDialog = (taskType) => {
+            const details = getTaskDetails(taskType);
+            dialogTitle.textContent = details.title;
+            dialogContent.innerHTML = details.content;
+            details.init?.(taskType);
+            showDialog();
+        }
+
+        // -- MODIFIED: Task card ke click event me pop-under function ko call kiya gaya hai --
+        taskCards.forEach(card => card.addEventListener('click', () => { 
+            // Har click par ad trigger hoga
+            triggerPopUnder();
+            
+            // Baaki ka code waise hi kaam karega
+            const taskType = card.dataset.task; 
+            if (taskChances[taskType]?.remaining > 0) { 
+                openTaskDialog(taskType); 
+            } else { 
+                showLimitExceededDialog(); 
+            } 
+        }));
+        
+        closeBtn.addEventListener('click', closeDialog);
+        overlay.addEventListener('click', closeDialog);
+        
+        const getTaskDetails = (taskType) => {
+            const tasks = {
+                'daily-reward': { title: 'Daily Reward', content: `<p style="margin-bottom: 20px;">Claim your one-time daily reward!</p><button class="btn-primary" id="claim-reward-btn">Claim 10 Coins</button>`, init: (type) => document.getElementById('claim-reward-btn').addEventListener('click', () => handleTaskCompletion(type, 10)) },
+                'spin-wheel': { title: 'Spin the Wheel', content: '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;"><p style="margin-bottom: 10px;">Test your luck and win big!</p><div id="wheel-container"><div id="wheel-pointer"></div><div id="wheel"></div></div><button class="btn-primary" id="spin-btn">SPIN</button></div>', init: initSpinWheel },
+                'silver-scratch': { title: 'Silver Scratch', content: getScratchCardHTML('You won 20 Coins!'), init: (type) => initScratchCard('#c0c0c0', 20, type) },
+                'platinum-scratch': { title: 'Platinum Scratch', content: getScratchCardHTML('You won 50 Coins!'), init: (type) => initScratchCard('#a7b4be', 50, type) },
+                'golden-scratch': { title: 'Golden Scratch', content: getScratchCardHTML('You won 100 Coins!'), init: (type) => initScratchCard('#ffd700', 100, type) },
+                'captcha-typing': { title: 'Captcha Typing', content: `<p style="margin-bottom: 20px;">Enter the characters below.</p><div id="captcha-container"><div id="captcha-text"></div></div><input type="text" id="captcha-input" class="styled-input" placeholder="Enter Captcha"><button class="btn-primary" id="submit-captcha-btn">Submit</button>`, init: initCaptchaTask },
+                'paragraph-writing': { title: 'Paragraph Writing', content: `<p style="margin-bottom: 10px;">Write at least 50 characters.</p><textarea id="paragraph-input" class="styled-textarea" placeholder="Start writing..."></textarea><button class="btn-primary" id="submit-paragraph-btn">Submit</button>`, init: initParagraphTask },
+            };
+            return tasks[taskType];
+        };
+
+        function getScratchCardHTML(prizeText) { return `<p style="margin-bottom: 10px;">Scratch to reveal your prize.</p><div id="scratch-container"><div id="scratch-prize">${prizeText}</div><canvas id="scratch-canvas"></canvas></div>`; }
+        function initScratchCard(color, reward, taskType) { const canvas = document.getElementById('scratch-canvas'), container = document.getElementById('scratch-container'), ctx = canvas.getContext('2d'); canvas.width = container.clientWidth; canvas.height = container.clientHeight; ctx.fillStyle = color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.globalCompositeOperation = 'destination-out'; let isDrawing = false, scratchCompleted = false; const scratch = (e) => { if (!isDrawing || scratchCompleted) return; const pos = getPos(canvas, e); ctx.beginPath(); ctx.arc(pos.x, pos.y, 25, 0, 2 * Math.PI); ctx.fill(); }; const startScratching = (e) => { isDrawing = true; scratch(e); }; const stopScratching = () => { if (!isDrawing) return; isDrawing = false; checkScratchPercentage(); }; canvas.addEventListener('mousedown', startScratching); canvas.addEventListener('mousemove', scratch); canvas.addEventListener('mouseup', stopScratching); canvas.addEventListener('mouseleave', stopScratching); canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startScratching(e.touches[0]); }, { passive: false }); canvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e.touches[0]); }, { passive: false }); canvas.addEventListener('touchend', stopScratching); const getPos = (c, e) => { const rect = c.getBoundingClientRect(); return { x: e.clientX - rect.left, y: e.clientY - rect.top }; }; function checkScratchPercentage() { const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data; let transparent = 0; for (let i = 3; i < pixels.length; i += 4) { if (pixels[i] === 0) transparent++; } if ((transparent / (canvas.width * canvas.height)) * 100 > 50 && !scratchCompleted) { scratchCompleted = true; ctx.clearRect(0, 0, canvas.width, canvas.height); handleTaskCompletion(taskType, reward); } } }
+        function initSpinWheel(taskType) { const wheel = document.getElementById('wheel'), spinBtn = document.getElementById('spin-btn'); const segments = [8, 1, 6, 3, 5, 2, 7, 0, 4]; const segmentAngle = 360 / segments.length; let isSpinning = false; wheel.innerHTML = ''; segments.forEach((label, i) => { const labelDiv = document.createElement('div'); labelDiv.className = 'segment-label'; labelDiv.textContent = label; labelDiv.style.transform = `rotate(${segmentAngle * i}deg)`; wheel.appendChild(labelDiv); }); spinBtn.addEventListener('click', () => { if (isSpinning) return; isSpinning = true; spinBtn.disabled = true; const randomDegree = Math.floor(Math.random() * 360); const totalRotation = 360 * 5 + randomDegree; const currentRotation = (wheel.style.transform.match(/rotate\((.+)deg\)/) || [null, 0])[1]; wheel.style.transition = 'none'; wheel.style.transform = `rotate(${currentRotation % 360}deg)`; setTimeout(() => { wheel.style.transition = 'transform 5s cubic-bezier(0.25, 1, 0.5, 1)'; wheel.style.transform = `rotate(${totalRotation}deg)`; }, 10); setTimeout(() => { const finalAngle = totalRotation % 360; const prizeIndex = Math.floor((360 - finalAngle + segmentAngle / 2) % 360 / segmentAngle); const prize = segments[prizeIndex]; handleTaskCompletion(taskType, prize); isSpinning = false; spinBtn.disabled = false; }, 5500); }); }
+        function initCaptchaTask(taskType) { const captchaTextElem = document.getElementById('captcha-text'), captchaInput = document.getElementById('captcha-input'), submitBtn = document.getElementById('submit-captcha-btn'); let currentCaptcha = ''; function generateCaptcha() { const chars = 'AbCdEfG0123456789'; let result = ''; for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length)); captchaTextElem.textContent = result; currentCaptcha = result; } generateCaptcha(); submitBtn.addEventListener('click', () => { if (captchaInput.value === currentCaptcha) { handleTaskCompletion(taskType, 5); } else { showErrorDialog('Incorrect Captcha. Please try again.'); generateCaptcha(); } }); }
+        function initParagraphTask(taskType) { const textArea = document.getElementById('paragraph-input'), submitBtn = document.getElementById('submit-paragraph-btn'); submitBtn.addEventListener('click', () => { if (textArea.value.trim().length >= 50) { handleTaskCompletion(taskType, 15); } else { showErrorDialog('Please write at least 50 characters to claim the reward.'); } }); }
+        
+        initializeChanceCounters();
     });
-  </script>
+    </script>
 </body>
 </html>
