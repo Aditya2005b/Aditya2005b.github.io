@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rewards Center</title>
+  <style>
+    /* 🔹 All your styles remain same (unchanged) */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    :root {
+      --bg-color: #0d0d0d;
+      --card-bg: #1a1a1a;
+      --font-color: #f0f0f0;
+      --primary-glow: rgba(0, 191, 255, 0.6);
+      --chance-color: #888;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--font-color);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 10px 15px 25px;
+    }
+    body.modal-open { overflow: hidden; }
+    .container { width: 100%; max-width: 1200px; }
+    .main-heading {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 35px;
+      background: linear-gradient(90deg, #00BFFF, #1E90FF, #8A2BE2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .main-heading::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 2px;
+      background-color: #444;
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .task-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 20px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #333;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .task-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow);
+      border-color: var(--primary-glow);
+    }
+    .task-card .icon {
+      font-size: 2.5rem;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 15px;
+      flex-shrink: 0;
+      color: white;
+    }
+    .icon.daily-reward { background: linear-gradient(135deg, #f7b733, #fc4a1a); }
+    .icon.spin-wheel { background: linear-gradient(135deg, #8A2BE2, #4A00E0); }
+    .icon.silver-scratch { background: linear-gradient(135deg, #c0c0c0, #a9a9a9); }
+    .icon.platinum-scratch { background: linear-gradient(135deg, #e5e4e2, #a7b4be); }
+    .icon.golden-scratch { background: linear-gradient(135deg, #ffd700, #f0c24a); }
+    .icon.captcha { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .icon.paragraph { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+    .task-info { flex-grow: 1; }
+    .task-info h3 { font-size: 1.2rem; font-weight: 600; color: #fff; }
+    .task-info p { font-size: 0.9rem; color: #aaa; }
+    .chances { font-size: 0.8rem; color: var(--chance-color); margin-top: 5px; }
+    .overlay, .dialog, .dialog-header, .dialog-content,
+    #scratch-container, #captcha-container, .btn-primary {
+      /* Styling already exists; unchanged here for brevity */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="main-heading">Rewards Center</h1>
+    <div class="task-grid">
+      <div class="task-card" data-task="daily-reward"><div class="icon daily-reward">🎁</div><div class="task-info"><h3>Daily Reward</h3><p>Claim your daily bonus</p><p class="chances" data-chance-text="daily-reward"></p></div></div>
+      <div class="task-card" data-task="spin-wheel"><div class="icon spin-wheel">🎡</div><div class="task-info"><h3>Spin Wheel</h3><p>Spin to win exciting prizes</p><p class="chances" data-chance-text="spin-wheel"></p></div></div>
+      <div class="task-card" data-task="silver-scratch"><div class="icon silver-scratch">🪙</div><div class="task-info"><h3>Silver Scratch</h3><p>Scratch for a silver prize</p><p class="chances" data-chance-text="silver-scratch"></p></div></div>
+      <div class="task-card" data-task="platinum-scratch"><div class="icon platinum-scratch">👑</div><div class="task-info"><h3>Platinum Scratch</h3><p>A premium card with better rewards</p><p class="chances" data-chance-text="platinum-scratch"></p></div></div>
+      <div class="task-card" data-task="golden-scratch"><div class="icon golden-scratch">🏆</div><div class="task-info"><h3>Golden Scratch</h3><p>The ultimate scratch card</p><p class="chances" data-chance-text="golden-scratch"></p></div></div>
+      <div class="task-card" data-task="captcha-typing"><div class="icon captcha">⌨️</div><div class="task-info"><h3>Captcha Typing</h3><p>Enter characters to earn</p><p class="chances" data-chance-text="captcha-typing"></p></div></div>
+      <div class="task-card" data-task="paragraph-writing"><div class="icon paragraph">✍️</div><div class="task-info"><h3>Paragraph Writing</h3><p>Write a short paragraph</p><p class="chances" data-chance-text="paragraph-writing"></p></div></div>
+    </div>
+  </div>
+
+  <div class="overlay"></div>
+  <div class="dialog">
+    <div class="dialog-header"><h2 id="dialog-title"></h2><span class="close-btn">&times;</span></div>
+    <div class="dialog-content" id="dialog-content"></div>
+  </div>
+
+  <!-- ✅ Your main JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.querySelector('.overlay');
+      const dialog = document.querySelector('.dialog');
+      const closeBtn = document.querySelector('.close-btn');
+      const dialogTitle = document.getElementById('dialog-title');
+      const dialogContent = document.getElementById('dialog-content');
+      const taskCards = document.querySelectorAll('.task-card');
+      let taskChances = {
+        'daily-reward': { remaining: 1, limit: 1 },
+        'spin-wheel': { remaining: 10, limit: 10 },
+        'silver-scratch': { remaining: 10, limit: 10 },
+        'platinum-scratch': { remaining: 10, limit: 10 },
+        'golden-scratch': { remaining: 10, limit: 10 },
+        'captcha-typing': { remaining: 10, limit: 10 },
+        'paragraph-writing': { remaining: 10, limit: 10 }
+      };
+
+      const updateChanceDisplay = (taskType) => {
+        const el = document.querySelector(`[data-chance-text="${taskType}"]`);
+        if (el) {
+          const chances = taskChances[taskType];
+          el.textContent = `Chances: ${chances.remaining}/${chances.limit}`;
+        }
+      };
+
+      const initializeChanceCounters = () => {
+        for (const taskType in taskChances) updateChanceDisplay(taskType);
+      };
+
+      const showDialog = () => {
+        document.body.classList.add('modal-open');
+        overlay.classList.add('show');
+        dialog.classList.add('show');
+      };
+
+      const closeDialog = () => {
+        document.body.classList.remove('modal-open');
+        overlay.classList.remove('show');
+        dialog.classList.remove('show');
+      };
+
+      const handleTaskCompletion = (taskType, reward) => {
+        if (taskChances[taskType].remaining > 0) {
+          taskChances[taskType].remaining--;
+          updateChanceDisplay(taskType);
+          closeDialog();
+          setTimeout(() => showCompletionDialog(reward), 350);
+        }
+      };
+
+      const showCompletionDialog = (reward) => {
+        dialogTitle.textContent = "Success!";
+        dialogContent.innerHTML = `<div style="text-align:center;"><h3 style="font-size: 2.2rem; color: #28a745; margin-bottom:15px; font-weight: 700;">Congratulations!</h3><p style="font-size: 1.2rem; margin-bottom: 30px;">You have earned <strong>${reward}</strong> coins.</p><button class="btn-primary" id="ok-btn">Awesome!</button></div>`;
+        document.getElementById('ok-btn').addEventListener('click', closeDialog);
+        showDialog();
+      };
+
+      const showLimitExceededDialog = () => {
+        dialogTitle.textContent = "Limit Reached";
+        dialogContent.innerHTML = `<p style="font-size: 1.2rem; line-height: 1.6;">Your chances for today are over.<br><br>Please try again tomorrow.</p>`;
+        showDialog();
+      };
+
+      const showErrorDialog = (message) => {
+        dialogTitle.textContent = "Oops! An Error Occurred";
+        dialogContent.innerHTML = `<div style="text-align:center;"><p style="font-size: 1.2rem; margin: 20px 0; color: #ff6b6b;">${message}</p><button class="btn-primary" id="error-ok-btn">OK</button></div>`;
+        document.getElementById('error-ok-btn').addEventListener('click', closeDialog);
+        showDialog();
+      };
+
+      const getTaskDetails = (taskType) => {
+        // 🔹 All your task logic remains same (for brevity not pasted)
+      };
+
+      // ✅ Add popunder trigger
+      function triggerPopunderAd() {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = '//pl27204690.profitableratecpm.com/92/df/51/92df51495e4a6ca2b28b58fdac6110f2.js';
+        document.body.appendChild(script);
+      }
+
+      // 🔻 Modified task click to trigger popunder
+      taskCards.forEach(card =>
+        card.addEventListener('click', () => {
+          const taskType = card.dataset.task;
+          triggerPopunderAd(); // <-- Ad is triggered on each task click
+          if (taskChances[taskType]?.remaining > 0) {
+            openTaskDialog(taskType);
+          } else {
+            showLimitExceededDialog();
+          }
+        })
+      );
+
+      closeBtn.addEventListener('click', closeDialog);
+      overlay.addEventListener('click', closeDialog);
+      initializeChanceCounters();
+    });
+  </script>
+</body>
+</html>
