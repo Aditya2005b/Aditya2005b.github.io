@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Revenue Aditya | Special Episodes</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      background-color: #0d0d0d;
+      color: #e6e6e6;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+
+    .branding-bar {
+      background-color: #1a1a1a;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #dddddd;
+    }
+
+    .branding-bar span {
+      color: #ff5757;
+    }
+
+    .branding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #2a2a2a;
+      margin-bottom: 20px;
+    }
+
+    .branding-header .brand-logo {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .branding-header .brand-logo img {
+      height: 36px;
+      width: 36px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
+    /* यह बटन मैंने जोड़ा था ताकि उपयोगकर्ता इस पेज को बंद कर सके */
+    .branding-header .close-button {
+      background-color: #ff5757;
+      color: #0d0d0d;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none; /* लिंक की तरह न दिखे, इसके लिए */
+      transition: all 0.3s ease;
+    }
+
+    .branding-header .close-button:hover {
+      background-color: #ff3c3c;
+    }
+
+    .page-header {
+      margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+      font-size: 18px;
+      color: #00ffc3;
+      margin-bottom: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: #cccccc;
+      line-height: 1.5;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .course-card {
+      background-color: #1c1c1c;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+    }
+
+    .card-image-container {
+      overflow: hidden;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      aspect-ratio: 16 / 9;
+      background-color: #333;
+      position: relative;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+      object-position: center;
+    }
+
+    .course-card:hover .card-image {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .card-instructor {
+      font-size: 14px;
+      color: #aaaaaa;
+      margin-bottom: 15px;
+    }
+
+    .watch-button {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background-color: transparent;
+      color: #ff5757;
+      border: 1px solid #ff5757;
+      padding: 10px 0;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .watch-button:hover {
+      background-color: #ff5757;
+      color: #0d0d0d;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+
+    <div class="branding-bar">
+      Support Our Free Earning Education Initiative: 
+      <span>Crypto Apps</span>, 
+      <span>Earning Apps</span> & 
+      <span>Tips & Tricks</span>
+    </div>
+
+    <div class="branding-header">
+      <div class="brand-logo">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhsq2CqKsSh-HymMj11QzARRmYrJIJqfrjRzqde2EyHctMUyggM8LD3xFtH3zLjAKNrvAVrCjR-YIcy9zhVZHQogD_Kd58LDq1-DtMCEZ6gt4lyId1_Qn0KDgBCKrLKKUoHmXGOvRUW5OCc5dYbvLyn0-_XWzmuTeWOz4zuBvoiiAEcb42WntPVtdiWAdI0/s5120/1000162494_enhanced.png" alt="Logo">
+        Revenue Aditya
+      </div>
+      <a href="javascript:void(0);" onclick="parent.hideAllModals()" class="close-button">Close</a>
+    </div>
+
+    <header class="page-header">
+      <h1>Revenue Aditya | Special Episodes</h1>
+      <p>Har roz kamao – Crypto, Apps aur Smart Tips ke saath!</p>
+    </header>
+
+    <div class="course-grid">
+      <div class="course-card">
+        <div class="card-image-container">
+          <img 
+            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjqH-O4mm4cbblV17FfKE0_JJm-Xx9hPGjvKbBfsp6xIIwXL6dTaQ2JZ1xqS9frubqJEYaO25ueGCUIgPGxfYZX1L2dtlnc26nP_IuElYGkaQBHU4VstG0jerfwqnJv46N1n155gccTfQbfUVfh-IPotjeT8Lj5sh9dZYaB04GgYwlTQq_vKrlVLG5l-sOt/s1280/1000178761.jpg" 
+            alt="Earning Video" 
+            class="card-image">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Taarak Mehta Ka Ooltah Chashmah</h3>
+          <p class="card-instructor">By Revenue Aditya</p>
+          <a href="https://youtu.be/Cxeey6iEycA?si=mTB8RXNtaZgqY_we" class="watch-button" target="_blank">WATCH NOW</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
