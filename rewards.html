@@ -110,7 +110,9 @@
         // --- Supabase Configuration ---
         const SUPABASE_URL = 'https://jwbbbagarnqjvlvgkreg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3YmJiYWdhcm5xanZsdmdrcmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTE1MzEsImV4cCI6MjA3MjAyNzUzMX0.ioRBwk2r08zDg8q5LzAakMFpPYdEHnOKSGJQkZSeb30';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // FIX: Variable ka naam badla gaya hai taaki conflict na ho
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // Asli app mein, aapko yeh authentication system se milega.
         const userId = 'user-test-001'; 
@@ -122,7 +124,6 @@
         const dialogContent = document.getElementById('dialog-content');
         const taskCards = document.querySelectorAll('.task-card');
 
-        // Default state aur client-side cache ke liye.
         let taskChances = {
             'daily-reward': { remaining: 1, limit: 1, id: null },
             'spin-wheel': { remaining: 10, limit: 10, id: null },
@@ -141,11 +142,11 @@
             }
         };
 
-        // --- Supabase se chances initialize karne ka function ---
         const initializeChanceCounters = async () => {
-            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            const today = new Date().toISOString().split('T')[0];
             
-            let { data: userTasks, error } = await supabase
+            // FIX: Sahi variable (supabaseClient) ka istemal kiya gaya
+            let { data: userTasks, error } = await supabaseClient
                 .from('task_chances')
                 .select('*')
                 .eq('user_id', userId);
@@ -157,24 +158,22 @@
             }
             
             if (!userTasks || userTasks.length === 0) {
-                // Agar user naya hai to records banayein
                 const newTasks = Object.keys(taskChances).map(type => ({
-                    user_id: userId,
-                    task_type: type,
-                    remaining: taskChances[type].limit,
-                    limit: taskChances[type].limit,
-                    last_updated: today
+                    user_id: userId, task_type: type, remaining: taskChances[type].limit,
+                    limit: taskChances[type].limit, last_updated: today
                 }));
-                const { data: insertedTasks, error: insertError } = await supabase.from('task_chances').insert(newTasks).select();
+                // FIX: Sahi variable (supabaseClient) ka istemal kiya gaya
+                const { data: insertedTasks, error: insertError } = await supabaseClient.from('task_chances').insert(newTasks).select();
                 if (insertError) {
                     console.error('Error creating new user tasks:', insertError);
                 } else if (insertedTasks) {
                      insertedTasks.forEach(task => {
-                        taskChances[task.task_type] = { remaining: task.remaining, limit: task.limit, id: task.id };
+                        if(taskChances[task.task_type]) {
+                           taskChances[task.task_type] = { remaining: task.remaining, limit: task.limit, id: task.id };
+                        }
                     });
                 }
             } else {
-                // User purana hai, chances reset karein agar zaroori hai
                 const tasksToUpdate = [];
                 userTasks.forEach(task => {
                     if (task.last_updated !== today) {
@@ -182,11 +181,14 @@
                         task.last_updated = today;
                         tasksToUpdate.push(task);
                     }
-                    taskChances[task.task_type] = { remaining: task.remaining, limit: task.limit, id: task.id };
+                    if(taskChances[task.task_type]) {
+                       taskChances[task.task_type] = { remaining: task.remaining, limit: task.limit, id: task.id };
+                    }
                 });
 
                 if (tasksToUpdate.length > 0) {
-                    const { error: updateError } = await supabase.from('task_chances').upsert(tasksToUpdate);
+                    // FIX: Sahi variable (supabaseClient) ka istemal kiya gaya
+                    const { error: updateError } = await supabaseClient.from('task_chances').upsert(tasksToUpdate);
                     if (updateError) console.error('Error resetting tasks:', updateError);
                 }
             }
@@ -205,20 +207,20 @@
             dialog.classList.remove('show');
         };
         
-        // --- Task poora hone par Supabase update karne wala function ---
         const handleTaskCompletion = async (taskType, reward) => {
             const task = taskChances[taskType];
             if (task && task.remaining > 0) {
                 task.remaining--;
                 
-                const { error } = await supabase
+                // FIX: Sahi variable (supabaseClient) ka istemal kiya gaya
+                const { error } = await supabaseClient
                     .from('task_chances')
                     .update({ remaining: task.remaining })
                     .eq('id', task.id);
                 
                 if (error) {
                     console.error('Error updating task chance:', error);
-                    task.remaining++; // Update fail hone par chance wapas add karein
+                    task.remaining++; 
                     return;
                 }
                 
