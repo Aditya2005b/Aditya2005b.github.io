@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rewards Center</title>
-    <!-- Supabase JS Library -->
+    <!-- Supabase-js library CDN se add ki gayi -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* आपका पूरा ओरिजिनल CSS यहाँ है */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         :root {
             --bg-color: #0d0d0d;
@@ -25,12 +24,28 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            padding: 80px 15px 25px; /* Added top padding for wallet/buttons */
+            padding: 10px 15px 25px;
         }
         body.modal-open { overflow: hidden; }
         .container { width: 100%; max-width: 1200px; }
-        .main-heading { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 35px; background: linear-gradient(90deg, #00BFFF, #1E90FF, #8A2BE2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .main-heading::after { content: ''; display: block; width: 100px; height: 2px; background-color: #444; margin: 10px auto 0; border-radius: 2px; }
+        .main-heading {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 35px;
+            background: linear-gradient(90deg, #00BFFF, #1E90FF, #8A2BE2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .main-heading::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background-color: #444;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
         .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .task-card { background: var(--card-bg); border-radius: 20px; padding: 20px; cursor: pointer; position: relative; overflow: hidden; border: 1px solid #333; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; align-items: center; gap: 20px; }
         .task-card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow); border-color: var(--primary-glow); }
@@ -69,21 +84,9 @@
         .btn-primary { background: linear-gradient(90deg, #1E90FF, #00BFFF); color: #fff; border: none; padding: 12px 30px; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; }
         .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(30, 144, 255, 0.5); }
         .btn-primary:disabled { background: #555; cursor: not-allowed; transform: none; box-shadow: none; }
-        
-        /* Buttons on top */
-        #wallet-display { position: fixed; top: 20px; left: 20px; background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(5px); color: white; padding: 10px 20px; border-radius: 12px; z-index: 2000; font-size: 1.1rem; border: 1px solid #444; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .top-button { position: fixed; top: 20px; color: white; text-decoration: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; }
-        #home-btn { right: 120px; background: #007bff; }
-        #logout-btn { right: 20px; background: #d9534f; border: none; font-family: 'Poppins', sans-serif; font-size: 1rem; cursor: pointer; }
     </style>
 </head>
 <body>
-    <!-- Wallet, Home, and Logout buttons -->
-    <div id="wallet-display">Loading...</div>
-    <a href="/home.html" id="home-btn" class="top-button">Home</a>
-    <button id="logout-btn" class="top-button">Logout</button>
-    
-    <!-- Your Original HTML Structure -->
     <div class="container">
         <h1 class="main-heading">Rewards Center</h1>
         <div class="task-grid">
@@ -102,143 +105,180 @@
         <div class="dialog-content" id="dialog-content"></div>
     </div>
 
-    <!-- ===== FINAL & SECURE SCRIPT (IMPROVED) ===== -->
     <script>
-        const supabaseUrl = 'https://jwbbbagarnqjvlvgkreg.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3YmJiYWdhcm5xanZsdmdrcmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTE1MzEsImV4cCI6MjA3MjAyNzUzMX0.ioRBwk2r08zDg8q5LzAakMFpPYdEHnOKSGJQkZSeb30';
-        const _supabase = createClient(supabaseUrl, supabaseKey);
-
-        let userMetadata = {};
-        let taskChances = {};
-
-        // --- 1. SECURITY CHECK & INITIALIZATION ---
-        async function checkSessionAndInitialize() {
-            try {
-                const { data: { session }, error: sessionError } = await _supabase.auth.getSession();
-                
-                if (sessionError) {
-                    throw new Error("Supabase session error: " + sessionError.message);
-                }
-
-                if (!session) {
-                    window.location.href = 'https://aditya2005b.github.io/login.html'; 
-                    return;
-                }
-                
-                await initializeApp(session.user);
-
-            } catch (error) {
-                console.error("Initialization failed:", error);
-                document.body.innerHTML = `<div style="color:white; text-align:center; padding-top: 50px;"><h1>An Error Occurred</h1><p>Could not load the rewards center. Please try again later.</p><p>Error: ${error.message}</p></div>`;
-            }
-        }
-
-        async function initializeApp(user) {
-            let metadata = user.user_metadata || {};
-            let needsUpdate = false;
-
-            const defaultChances = {
-                'daily-reward': { remaining: 1, limit: 1 }, 'spin-wheel': { remaining: 10, limit: 10 },
-                'silver-scratch': { remaining: 10, limit: 10 }, 'platinum-scratch': { remaining: 10, limit: 10 },
-                'golden-scratch': { remaining: 10, limit: 10 }, 'captcha-typing': { remaining: 10, limit: 10 },
-                'paragraph-writing': { remaining: 10, limit: 10 }
-            };
-
-            if (!metadata.coins && metadata.coins !== 0) {
-                metadata.coins = 0;
-                metadata.task_chances = defaultChances;
-                metadata.last_visit_date = new Date().toISOString().split('T')[0];
-                needsUpdate = true;
-            }
-
-            const today = new Date().toISOString().split('T')[0];
-            if (metadata.last_visit_date !== today) {
-                metadata.task_chances = defaultChances;
-                metadata.last_visit_date = today;
-                needsUpdate = true;
-            }
-
-            if (needsUpdate) {
-                const { error: updateError } = await _supabase.auth.updateUser({ data: metadata });
-                if (updateError) {
-                    console.error("Failed to update user metadata on initialization:", updateError);
-                }
-            }
-
-            userMetadata = metadata;
-            taskChances = metadata.task_chances;
-            
-            document.getElementById('wallet-display').textContent = `Coins: ${userMetadata.coins}`;
-            initializeChanceCounters();
-            setupEventListeners();
-        }
-
-        // --- 2. EVENT LISTENERS ---
-        function setupEventListeners() {
-            document.querySelectorAll('.task-card').forEach(card => card.addEventListener('click', () => {
-                const taskType = card.dataset.task;
-                if (taskChances[taskType]?.remaining > 0) openTaskDialog(taskType);
-                else showLimitExceededDialog();
-            }));
-            
-            document.querySelector('.close-btn').addEventListener('click', closeDialog);
-            document.querySelector('.overlay').addEventListener('click', closeDialog);
-            
-            document.getElementById('logout-btn').addEventListener('click', async () => {
-                await _supabase.auth.signOut();
-                window.location.href = 'https://aditya2005b.github.io/login.html'; 
-            });
-        }
+    document.addEventListener('DOMContentLoaded', async () => {
+        // --- Supabase Configuration ---
+        const SUPABASE_URL = 'https://jwbbbagarnqjvlvgkreg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3YmJiYWdhcm5xanZsdmdrcmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTE1MzEsImV4cCI6MjA3MjAyNzUzMX0.ioRBwk2r08zDg8q5LzAakMFpPYdEHnOKSGJQkZSeb30';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // --- 3. CORE FUNCTIONS (MODIFIED FOR SUPABASE) ---
+        // Asli app mein, aapko yeh authentication system se milega.
+        const userId = 'user-test-001'; 
+        
+        const overlay = document.querySelector('.overlay');
+        const dialog = document.querySelector('.dialog');
+        const closeBtn = document.querySelector('.close-btn');
+        const dialogTitle = document.getElementById('dialog-title');
+        const dialogContent = document.getElementById('dialog-content');
+        const taskCards = document.querySelectorAll('.task-card');
+
+        // Default state aur client-side cache ke liye.
+        let taskChances = {
+            'daily-reward': { remaining: 1, limit: 1, id: null },
+            'spin-wheel': { remaining: 10, limit: 10, id: null },
+            'silver-scratch': { remaining: 10, limit: 10, id: null },
+            'platinum-scratch': { remaining: 10, limit: 10, id: null },
+            'golden-scratch': { remaining: 10, limit: 10, id: null },
+            'captcha-typing': { remaining: 10, limit: 10, id: null },
+            'paragraph-writing': { remaining: 10, limit: 10, id: null },
+        };
+        
         const updateChanceDisplay = (taskType) => {
             const el = document.querySelector(`[data-chance-text="${taskType}"]`);
-            if (el) el.textContent = `Chances: ${taskChances[taskType].remaining}/${taskChances[taskType].limit}`;
+            if (el && taskChances[taskType]) {
+                const chances = taskChances[taskType];
+                el.textContent = `Chances: ${chances.remaining}/${chances.limit}`;
+            }
         };
-        const initializeChanceCounters = () => { for (const taskType in taskChances) updateChanceDisplay(taskType); };
 
+        // --- Supabase se chances initialize karne ka function ---
+        const initializeChanceCounters = async () => {
+            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            
+            let { data: userTasks, error } = await supabase
+                .from('task_chances')
+                .select('*')
+                .eq('user_id', userId);
+
+            if (error) {
+                console.error('Error fetching user tasks:', error);
+                Object.keys(taskChances).forEach(updateChanceDisplay);
+                return;
+            }
+            
+            if (!userTasks || userTasks.length === 0) {
+                // Agar user naya hai to records banayein
+                const newTasks = Object.keys(taskChances).map(type => ({
+                    user_id: userId,
+                    task_type: type,
+                    remaining: taskChances[type].limit,
+                    limit: taskChances[type].limit,
+                    last_updated: today
+                }));
+                const { data: insertedTasks, error: insertError } = await supabase.from('task_chances').insert(newTasks).select();
+                if (insertError) {
+                    console.error('Error creating new user tasks:', insertError);
+                } else if (insertedTasks) {
+                     insertedTasks.forEach(task => {
+                        taskChances[task.task_type] = { remaining: task.remaining, limit: task.limit, id: task.id };
+                    });
+                }
+            } else {
+                // User purana hai, chances reset karein agar zaroori hai
+                const tasksToUpdate = [];
+                userTasks.forEach(task => {
+                    if (task.last_updated !== today) {
+                        task.remaining = task.limit;
+                        task.last_updated = today;
+                        tasksToUpdate.push(task);
+                    }
+                    taskChances[task.task_type] = { remaining: task.remaining, limit: task.limit, id: task.id };
+                });
+
+                if (tasksToUpdate.length > 0) {
+                    const { error: updateError } = await supabase.from('task_chances').upsert(tasksToUpdate);
+                    if (updateError) console.error('Error resetting tasks:', updateError);
+                }
+            }
+            Object.keys(taskChances).forEach(updateChanceDisplay);
+        };
+        
+        const showDialog = () => {
+            document.body.classList.add('modal-open'); 
+            overlay.classList.add('show');
+            dialog.classList.add('show');
+        };
+        
+        const closeDialog = () => {
+            document.body.classList.remove('modal-open'); 
+            overlay.classList.remove('show');
+            dialog.classList.remove('show');
+        };
+        
+        // --- Task poora hone par Supabase update karne wala function ---
         const handleTaskCompletion = async (taskType, reward) => {
-            if (taskChances[taskType]?.remaining > 0) {
-                taskChances[taskType].remaining--;
-                const newTotalCoins = userMetadata.coins + reward;
+            const task = taskChances[taskType];
+            if (task && task.remaining > 0) {
+                task.remaining--;
                 
-                updateChanceDisplay(taskType);
-                document.getElementById('wallet-display').textContent = `Coins: ${newTotalCoins}`;
-
-                const updatedMetadata = { ...userMetadata, coins: newTotalCoins, task_chances: taskChances };
+                const { error } = await supabase
+                    .from('task_chances')
+                    .update({ remaining: task.remaining })
+                    .eq('id', task.id);
                 
-                const { error } = await _supabase.auth.updateUser({ data: updatedMetadata });
                 if (error) {
-                    showErrorDialog('Could not save reward. Please try again.');
-                    taskChances[taskType].remaining++;
-                    document.getElementById('wallet-display').textContent = `Coins: ${userMetadata.coins}`;
-                    updateChanceDisplay(taskType);
+                    console.error('Error updating task chance:', error);
+                    task.remaining++; // Update fail hone par chance wapas add karein
                     return;
                 }
-                userMetadata = updatedMetadata;
+                
+                updateChanceDisplay(taskType);
                 closeDialog();
                 setTimeout(() => showCompletionDialog(reward), 350);
             }
         };
-
-        // --- 4. ALL YOUR OTHER UI/GAME FUNCTIONS (UNCHANGED) ---
-        const dialogTitle = document.getElementById('dialog-title');
-        const dialogContent = document.getElementById('dialog-content');
-        const showDialog = () => { document.body.classList.add('modal-open'); document.querySelector('.overlay').classList.add('show'); document.querySelector('.dialog').classList.add('show'); };
-        const closeDialog = () => { document.body.classList.remove('modal-open'); document.querySelector('.overlay').classList.remove('show'); document.querySelector('.dialog').classList.remove('show'); };
-        const showCompletionDialog = (reward) => { dialogTitle.textContent = "Success!"; dialogContent.innerHTML = `<div style="text-align:center;"><h3 style="font-size: 2.2rem; color: #28a745; margin-bottom:15px; font-weight: 700;">Congratulations!</h3><p style="font-size: 1.2rem; margin-bottom: 30px;">You have earned <strong>${reward}</strong> coins.</p><button class="btn-primary" id="ok-btn">Awesome!</button></div>`; document.getElementById('ok-btn').addEventListener('click', closeDialog); showDialog(); };
-        const showLimitExceededDialog = () => { dialogTitle.textContent = "Limit Reached"; dialogContent.innerHTML = `<p style="font-size: 1.2rem; line-height: 1.6;">Your chances for today are over.<br><br>Please try again tomorrow.</p>`; showDialog(); };
-        const showErrorDialog = (message) => { dialogTitle.textContent = "Oops! An Error Occurred"; dialogContent.innerHTML = `<div style="text-align:center;"><p style="font-size: 1.2rem; margin: 20px 0; color: #ff6b6b;">${message}</p><button class="btn-primary" id="error-ok-btn">OK</button></div>`; document.getElementById('error-ok-btn').addEventListener('click', closeDialog); showDialog(); };
-        const getTaskDetails = (taskType) => { const tasks = { 'daily-reward': { title: 'Daily Reward', content: `<p style="margin-bottom: 20px;">Claim your one-time daily reward!</p><button class="btn-primary" id="claim-reward-btn">Claim 10 Coins</button>`, init: (type) => document.getElementById('claim-reward-btn').addEventListener('click', () => handleTaskCompletion(type, 10)) }, 'spin-wheel': { title: 'Spin the Wheel', content: '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;"><p style="margin-bottom: 10px;">Test your luck and win big!</p><div id="wheel-container"><div id="wheel-pointer"></div><div id="wheel"></div></div><button class="btn-primary" id="spin-btn">SPIN</button></div>', init: initSpinWheel }, 'silver-scratch': { title: 'Silver Scratch', content: getScratchCardHTML('You won 20 Coins!'), init: (type) => initScratchCard('#c0c0c0', 20, type) }, 'platinum-scratch': { title: 'Platinum Scratch', content: getScratchCardHTML('You won 50 Coins!'), init: (type) => initScratchCard('#a7b4be', 50, type) }, 'golden-scratch': { title: 'Golden Scratch', content: getScratchCardHTML('You won 100 Coins!'), init: (type) => initScratchCard('#ffd700', 100, type) }, 'captcha-typing': { title: 'Captcha Typing', content: `<p style="margin-bottom: 20px;">Enter the characters below.</p><div id="captcha-container"><div id="captcha-text"></div></div><input type="text" id="captcha-input" class="styled-input" placeholder="Enter Captcha"><button class="btn-primary" id="submit-captcha-btn">Submit</button>`, init: initCaptchaTask }, 'paragraph-writing': { title: 'Paragraph Writing', content: `<p style="margin-bottom: 10px;">Write at least 50 characters.</p><textarea id="paragraph-input" class="styled-textarea" placeholder="Start writing..."></textarea><button class="btn-primary" id="submit-paragraph-btn">Submit</button>`, init: initParagraphTask }, }; return tasks[taskType]; };
-        const openTaskDialog = (taskType) => { const details = getTaskDetails(taskType); dialogTitle.textContent = details.title; dialogContent.innerHTML = details.content; details.init?.(taskType); showDialog(); };
-        function getScratchCardHTML(prizeText) { return `<p style="margin-bottom: 10px;">Scratch to reveal your prize.</p><div id="scratch-container"><div id="scratch-prize">${prizeText}</div><canvas id="scratch-canvas"></canvas></div>`; }
-        function initScratchCard(color, reward, taskType) { const canvas = document.getElementById('scratch-canvas'), container = document.getElementById('scratch-container'), ctx = canvas.getContext('2d'); if(!canvas || !container) return; canvas.width = container.clientWidth; canvas.height = container.clientHeight; ctx.fillStyle = color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.globalCompositeOperation = 'destination-out'; let isDrawing = false, scratchCompleted = false; const scratch = (e) => { if (!isDrawing || scratchCompleted) return; const pos = getPos(canvas, e); ctx.beginPath(); ctx.arc(pos.x, pos.y, 25, 0, 2 * Math.PI); ctx.fill(); }; const startScratching = (e) => { isDrawing = true; scratch(e); }; const stopScratching = () => { if (!isDrawing) return; isDrawing = false; checkScratchPercentage(); }; canvas.addEventListener('mousedown', startScratching); canvas.addEventListener('mousemove', scratch); canvas.addEventListener('mouseup', stopScratching); canvas.addEventListener('mouseleave', stopScratching); canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startScratching(e.touches[0]); }, { passive: false }); canvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e.touches[0]); }, { passive: false }); canvas.addEventListener('touchend', stopScratching); const getPos = (c, e) => { const rect = c.getBoundingClientRect(); return { x: e.clientX - rect.left, y: e.clientY - rect.top }; }; function checkScratchPercentage() { const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data; let transparent = 0; for (let i = 3; i < pixels.length; i += 4) { if (pixels[i] === 0) transparent++; } if ((transparent / (canvas.width * canvas.height)) * 100 > 50 && !scratchCompleted) { scratchCompleted = true; ctx.clearRect(0, 0, canvas.width, canvas.height); handleTaskCompletion(taskType, reward); } } }
-        function initSpinWheel(taskType) { const wheel = document.getElementById('wheel'), spinBtn = document.getElementById('spin-btn'); const segments = [8, 1, 6, 3, 5, 2, 7, 0, 4]; const segmentAngle = 360 / segments.length; let isSpinning = false; wheel.innerHTML = ''; segments.forEach((label, i) => { const labelDiv = document.createElement('div'); labelDiv.className = 'segment-label'; labelDiv.textContent = label; labelDiv.style.transform = `rotate(${segmentAngle * i}deg)`; wheel.appendChild(labelDiv); }); spinBtn.addEventListener('click', () => { if (isSpinning) return; isSpinning = true; spinBtn.disabled = true; const randomDegree = Math.floor(Math.random() * 360); const totalRotation = 360 * 5 + randomDegree; const currentRotation = (wheel.style.transform.match(/rotate\((.+)deg\)/) || [null, 0])[1]; wheel.style.transition = 'none'; wheel.style.transform = `rotate(${currentRotation % 360}deg)`; setTimeout(() => { wheel.style.transition = 'transform 5s cubic-bezier(0.25, 1, 0.5, 1)'; wheel.style.transform = `rotate(${totalRotation}deg)`; }, 10); setTimeout(() => { const finalAngle = totalRotation % 360; const prizeIndex = Math.floor((360 - finalAngle + segmentAngle / 2) % 360 / segmentAngle); const prize = segments[prizeIndex]; handleTaskCompletion(taskType, prize); isSpinning = false; spinBtn.disabled = false; }, 5500); }); }
-        function initCaptchaTask(taskType) { const captchaTextElem = document.getElementById('captcha-text'), captchaInput = document.getElementById('captcha-input'), submitBtn = document.getElementById('submit-captcha-btn'); let currentCaptcha = ''; function generateCaptcha() { const chars = 'AbCdEfG0123456789'; let result = ''; for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length)); captchaTextElem.textContent = result; currentCaptcha = result; } generateCaptcha(); submitBtn.addEventListener('click', () => { if (captchaInput.value === currentCaptcha) handleTaskCompletion(taskType, 5); else { showErrorDialog('Incorrect Captcha. Please try again.'); generateCaptcha(); captchaInput.value=''; } }); }
-        function initParagraphTask(taskType) { const textArea = document.getElementById('paragraph-input'), submitBtn = document.getElementById('submit-paragraph-btn'); submitBtn.addEventListener('click', () => { if (textArea.value.trim().length >= 50) handleTaskCompletion(taskType, 15); else showErrorDialog('Please write at least 50 characters to claim the reward.'); }); }
         
-        // Run the security check as soon as the page loads.
-        checkSessionAndInitialize();
+        const showCompletionDialog = (reward) => {
+            dialogTitle.textContent = "Success!";
+            dialogContent.innerHTML = `<div style="text-align:center;"><h3 style="font-size: 2.2rem; color: #28a745; margin-bottom:15px; font-weight: 700;">Congratulations!</h3><p style="font-size: 1.2rem; margin-bottom: 30px;">You have earned <strong>${reward}</strong> coins.</p><button class="btn-primary" id="ok-btn">Awesome!</button></div>`;
+            document.getElementById('ok-btn').addEventListener('click', closeDialog);
+            showDialog();
+        };
+        const showLimitExceededDialog = () => {
+            dialogTitle.textContent = "Limit Reached";
+            dialogContent.innerHTML = `<p style="font-size: 1.2rem; line-height: 1.6;">Your chances for today are over.<br><br>Please try again tomorrow.</p>`;
+            showDialog();
+        };
+        const showErrorDialog = (message) => {
+            dialogTitle.textContent = "Oops! An Error Occurred";
+            dialogContent.innerHTML = `<div style="text-align:center;"><p style="font-size: 1.2rem; margin: 20px 0; color: #ff6b6b;">${message}</p><button class="btn-primary" id="error-ok-btn">OK</button></div>`;
+            document.getElementById('error-ok-btn').addEventListener('click', closeDialog);
+            showDialog();
+        };
+        
+        const openTaskDialog = (taskType) => {
+            const details = getTaskDetails(taskType);
+            dialogTitle.textContent = details.title;
+            dialogContent.innerHTML = details.content;
+            details.init?.(taskType);
+            showDialog();
+        }
+
+        taskCards.forEach(card => card.addEventListener('click', () => { const taskType = card.dataset.task; if (taskChances[taskType]?.remaining > 0) { openTaskDialog(taskType); } else { showLimitExceededDialog(); } }));
+        closeBtn.addEventListener('click', closeDialog);
+        overlay.addEventListener('click', closeDialog);
+        
+        const getTaskDetails = (taskType) => {
+            const tasks = {
+                'daily-reward': { title: 'Daily Reward', content: `<p style="margin-bottom: 20px;">Claim your one-time daily reward!</p><button class="btn-primary" id="claim-reward-btn">Claim 10 Coins</button>`, init: (type) => document.getElementById('claim-reward-btn').addEventListener('click', () => handleTaskCompletion(type, 10)) },
+                'spin-wheel': { title: 'Spin the Wheel', content: '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;"><p style="margin-bottom: 10px;">Test your luck and win big!</p><div id="wheel-container"><div id="wheel-pointer"></div><div id="wheel"></div></div><button class="btn-primary" id="spin-btn">SPIN</button></div>', init: initSpinWheel },
+                'silver-scratch': { title: 'Silver Scratch', content: getScratchCardHTML('You won 20 Coins!'), init: (type) => initScratchCard('#c0c0c0', 20, type) },
+                'platinum-scratch': { title: 'Platinum Scratch', content: getScratchCardHTML('You won 50 Coins!'), init: (type) => initScratchCard('#a7b4be', 50, type) },
+                'golden-scratch': { title: 'Golden Scratch', content: getScratchCardHTML('You won 100 Coins!'), init: (type) => initScratchCard('#ffd700', 100, type) },
+                'captcha-typing': { title: 'Captcha Typing', content: `<p style="margin-bottom: 20px;">Enter the characters below.</p><div id="captcha-container"><div id="captcha-text"></div></div><input type="text" id="captcha-input" class="styled-input" placeholder="Enter Captcha"><button class="btn-primary" id="submit-captcha-btn">Submit</button>`, init: initCaptchaTask },
+                'paragraph-writing': { title: 'Paragraph Writing', content: `<p style="margin-bottom: 10px;">Write at least 50 characters.</p><textarea id="paragraph-input" class="styled-textarea" placeholder="Start writing..."></textarea><button class="btn-primary" id="submit-paragraph-btn">Submit</button>`, init: initParagraphTask },
+            };
+            return tasks[taskType];
+        };
+
+        function getScratchCardHTML(prizeText) { return `<p style="margin-bottom: 10px;">Scratch to reveal your prize.</p><div id="scratch-container"><div id="scratch-prize">${prizeText}</div><canvas id="scratch-canvas"></canvas></div>`; }
+        function initScratchCard(color, reward, taskType) { const canvas = document.getElementById('scratch-canvas'), container = document.getElementById('scratch-container'), ctx = canvas.getContext('2d'); canvas.width = container.clientWidth; canvas.height = container.clientHeight; ctx.fillStyle = color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.globalCompositeOperation = 'destination-out'; let isDrawing = false, scratchCompleted = false; const scratch = (e) => { if (!isDrawing || scratchCompleted) return; const pos = getPos(canvas, e); ctx.beginPath(); ctx.arc(pos.x, pos.y, 25, 0, 2 * Math.PI); ctx.fill(); }; const startScratching = (e) => { isDrawing = true; scratch(e); }; const stopScratching = () => { if (!isDrawing) return; isDrawing = false; checkScratchPercentage(); }; canvas.addEventListener('mousedown', startScratching); canvas.addEventListener('mousemove', scratch); canvas.addEventListener('mouseup', stopScratching); canvas.addEventListener('mouseleave', stopScratching); canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startScratching(e.touches[0]); }, { passive: false }); canvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e.touches[0]); }, { passive: false }); canvas.addEventListener('touchend', stopScratching); const getPos = (c, e) => { const rect = c.getBoundingClientRect(); return { x: e.clientX - rect.left, y: e.clientY - rect.top }; }; function checkScratchPercentage() { const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data; let transparent = 0; for (let i = 3; i < pixels.length; i += 4) { if (pixels[i] === 0) transparent++; } if ((transparent / (canvas.width * canvas.height)) * 100 > 50 && !scratchCompleted) { scratchCompleted = true; ctx.clearRect(0, 0, canvas.width, canvas.height); handleTaskCompletion(taskType, reward); } } }
+        function initSpinWheel(taskType) { const wheel = document.getElementById('wheel'), spinBtn = document.getElementById('spin-btn'); const segments = [8, 1, 6, 3, 5, 2, 7, 0, 4]; const segmentAngle = 360 / segments.length; let isSpinning = false; wheel.innerHTML = ''; segments.forEach((label, i) => { const labelDiv = document.createElement('div'); labelDiv.className = 'segment-label'; labelDiv.textContent = label; labelDiv.style.transform = `rotate(${segmentAngle * i}deg)`; wheel.appendChild(labelDiv); }); spinBtn.addEventListener('click', () => { if (isSpinning) return; isSpinning = true; spinBtn.disabled = true; const randomDegree = Math.floor(Math.random() * 360); const totalRotation = 360 * 5 + randomDegree; const currentRotation = (wheel.style.transform.match(/rotate\((.+)deg\)/) || [null, 0])[1]; wheel.style.transition = 'none'; wheel.style.transform = `rotate(${currentRotation % 360}deg)`; setTimeout(() => { wheel.style.transition = 'transform 5s cubic-bezier(0.25, 1, 0.5, 1)'; wheel.style.transform = `rotate(${totalRotation}deg)`; }, 10); setTimeout(() => { const finalAngle = totalRotation % 360; const prizeIndex = Math.floor((360 - finalAngle + segmentAngle / 2) % 360 / segmentAngle); const prize = segments[prizeIndex]; handleTaskCompletion(taskType, prize); isSpinning = false; spinBtn.disabled = false; }, 5500); }); }
+        function initCaptchaTask(taskType) { const captchaTextElem = document.getElementById('captcha-text'), captchaInput = document.getElementById('captcha-input'), submitBtn = document.getElementById('submit-captcha-btn'); let currentCaptcha = ''; function generateCaptcha() { const chars = 'AbCdEfG0123456789'; let result = ''; for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length)); captchaTextElem.textContent = result; currentCaptcha = result; } generateCaptcha(); submitBtn.addEventListener('click', () => { if (captchaInput.value === currentCaptcha) { handleTaskCompletion(taskType, 5); } else { showErrorDialog('Incorrect Captcha. Please try again.'); generateCaptcha(); } }); }
+        function initParagraphTask(taskType) { const textArea = document.getElementById('paragraph-input'), submitBtn = document.getElementById('submit-paragraph-btn'); submitBtn.addEventListener('click', () => { if (textArea.value.trim().length >= 50) { handleTaskCompletion(taskType, 15); } else { showErrorDialog('Please write at least 50 characters to claim the reward.'); } }); }
+        
+        await initializeChanceCounters();
+    });
     </script>
 </body>
 </html>
