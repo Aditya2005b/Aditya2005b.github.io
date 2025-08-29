@@ -26,10 +26,6 @@
             align-items: flex-start;
             min-height: 100vh;
             padding: 80px 15px 25px; /* Added top padding for wallet/buttons */
-            transition: opacity 0.5s;
-        }
-        body.hidden {
-            opacity: 0;
         }
         body.modal-open { overflow: hidden; }
         .container { width: 100%; max-width: 1200px; }
@@ -81,9 +77,9 @@
         #logout-btn { right: 20px; background: #d9534f; border: none; font-family: 'Poppins', sans-serif; font-size: 1rem; cursor: pointer; }
     </style>
 </head>
-<body class="hidden">
+<body>
     <!-- Wallet, Home, and Logout buttons -->
-    <div id="wallet-display">Coins: ...</div>
+    <div id="wallet-display">Loading...</div>
     <a href="/home.html" id="home-btn" class="top-button">Home</a>
     <button id="logout-btn" class="top-button">Logout</button>
     
@@ -106,7 +102,7 @@
         <div class="dialog-content" id="dialog-content"></div>
     </div>
 
-    <!-- ===== FINAL & SECURE SCRIPT ===== -->
+    <!-- ===== FINAL & SECURE SCRIPT (IMPROVED) ===== -->
     <script>
         const supabaseUrl = 'https://jwbbbagarnqjvlvgkreg.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3YmJiYWdhcm5xanZsdmdrcmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTE1MzEsImV4cCI6MjA3MjAyNzUzMX0.ioRBwk2r08zDg8q5LzAakMFpPYdEHnOKSGJQkZSeb30';
@@ -117,14 +113,24 @@
 
         // --- 1. SECURITY CHECK & INITIALIZATION ---
         async function checkSessionAndInitialize() {
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) {
-                // User is not logged in, redirect to your login page.
-                window.location.href = 'https://aditya2005b.github.io/login.html'; 
-                return;
+            try {
+                const { data: { session }, error: sessionError } = await _supabase.auth.getSession();
+                
+                if (sessionError) {
+                    throw new Error("Supabase session error: " + sessionError.message);
+                }
+
+                if (!session) {
+                    window.location.href = 'https://aditya2005b.github.io/login.html'; 
+                    return;
+                }
+                
+                await initializeApp(session.user);
+
+            } catch (error) {
+                console.error("Initialization failed:", error);
+                document.body.innerHTML = `<div style="color:white; text-align:center; padding-top: 50px;"><h1>An Error Occurred</h1><p>Could not load the rewards center. Please try again later.</p><p>Error: ${error.message}</p></div>`;
             }
-            // User is logged in, start the app.
-            initializeApp(session.user);
         }
 
         async function initializeApp(user) {
@@ -138,7 +144,6 @@
                 'paragraph-writing': { remaining: 10, limit: 10 }
             };
 
-            // If it's a new user or old user without data, set default values.
             if (!metadata.coins && metadata.coins !== 0) {
                 metadata.coins = 0;
                 metadata.task_chances = defaultChances;
@@ -146,24 +151,24 @@
                 needsUpdate = true;
             }
 
-            // Daily reset logic for chances.
             const today = new Date().toISOString().split('T')[0];
             if (metadata.last_visit_date !== today) {
-                metadata.task_chances = defaultChances; // Reset all chances
+                metadata.task_chances = defaultChances;
                 metadata.last_visit_date = today;
                 needsUpdate = true;
             }
 
             if (needsUpdate) {
-                await _supabase.auth.updateUser({ data: metadata });
+                const { error: updateError } = await _supabase.auth.updateUser({ data: metadata });
+                if (updateError) {
+                    console.error("Failed to update user metadata on initialization:", updateError);
+                }
             }
 
             userMetadata = metadata;
             taskChances = metadata.task_chances;
             
-            // Update UI elements
             document.getElementById('wallet-display').textContent = `Coins: ${userMetadata.coins}`;
-            document.body.classList.remove('hidden'); // Show the page content
             initializeChanceCounters();
             setupEventListeners();
         }
@@ -205,7 +210,7 @@
                 const { error } = await _supabase.auth.updateUser({ data: updatedMetadata });
                 if (error) {
                     showErrorDialog('Could not save reward. Please try again.');
-                    taskChances[taskType].remaining++; // Revert change on error
+                    taskChances[taskType].remaining++;
                     document.getElementById('wallet-display').textContent = `Coins: ${userMetadata.coins}`;
                     updateChanceDisplay(taskType);
                     return;
