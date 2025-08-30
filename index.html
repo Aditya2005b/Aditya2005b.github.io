@@ -99,101 +99,14 @@
     <div class="background-gradient"></div>
 
     <header class="site-header" id="siteHeader">
-        <div id="header-content">
-            <a href="#" class="brand-logo">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhsq2CqKsSh-HymMj11QzARRmYrJIJqfrjRzqde2EyHctMUyggM8LD3xFtH3zLjAKNrvAVrCjR-YIcy9zhVZHQogD_Kd58LDq1-DtMCEZ6gt4lyId1_Qn0KDgBCKrLKKUoHmXGOvRUW5OCc5dYbvLyn0-_XWzmuTeWOz4zuBvoiiAEcb42WntPVtdiWAdI0/s5120/1000162494_enhanced.png" alt="Logo">
-                Revenue Aditya
-            </a>
-            <p class="header-subtitle">Your daily guide to online earning.</p>
-        </div>
-        <div class="search-container">
-            <div class="search-icon" id="searchIcon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            </div>
-            <input type="text" id="searchInput" placeholder="Search for apps, crypto, tricks...">
-            <button id="cancelSearchBtn">Cancel</button>
-        </div>
+        <!-- Header Content -->
     </header>
 
     <div class="container" id="cards-container">
-        <div class="card">
-            <h2><i class="fa-solid fa-wallet" style="margin-right: 12px; color: var(--accent-primary);"></i>Wallet</h2>
-            <p>Manage your earnings, view transaction history, and withdraw funds securely.</p>
-            <a class="btn" href="javascript:void(0)" onclick="showWalletModal()">Open Wallet</a>
-        </div>
-        <div class="card">
-            <h2><i class="fa-solid fa-list-check" style="margin-right: 12px; color: var(--accent-secondary);"></i>Daily Tasks & Surveys</h2>
-            <p>Earn ₹20–₹100 daily with simple tasks, captchas, and quick surveys.</p>
-            <a class="btn btn-secondary" href="#">Do Now</a>
-        </div>
-        <div class="card">
-            <h2><i class="fa-brands fa-whatsapp" style="margin-right: 12px; color: #25D366;"></i>Join WhatsApp</h2>
-            <p>Get exclusive tricks, secret app alerts, and instant updates on WhatsApp.</p>
-            <a class="btn" href="https://whatsapp.com/channel/0029VbB1UnZAe5VkOLgTHv1k" target="_blank">Join Now</a>
-        </div>
-        <div class="card">
-            <h2><i class="fa-brands fa-youtube" style="margin-right: 12px; color: #FF0000;"></i>Subscribe on YouTube</h2>
-            <p>In-depth video guides, payment proofs, and installation tricks.</p>
-            <a class="btn" href="https://youtube.com/@revenue.aditya?si=nZS5FiJWIEN1KVnO" target="_blank">Subscribe</a>
-        </div>
-        <div class="card">
-            <h2><i class="fa-solid fa-key" style="margin-right: 12px; color: #FFD700;"></i>Unlock Secret App</h2>
-            <p>Enter the correct code to unveil a hidden high-earning application.</p>
-            <a class="btn" href="javascript:void(0)" onclick="showCodeModal()">Enter Code</a>
-        </div>
-        <div class="card">
-            <h2><i class="fa-solid fa-user-group" style="margin-right: 12px; color: #FF69B4;"></i>Refer & Earn</h2>
-            <p>Find the best referral programs and earn bonuses by inviting friends.</p>
-            <a class="btn btn-secondary" href="#">Explore Offers</a>
-        </div>
-        
-        <div class="no-results" id="noResultsMessage">
-            <h2>Oops! No results found</h2>
-            <p>We couldn't find any match for your search. Please try different keywords.</p>
-        </div>
+        <!-- Cards Content -->
     </div>
 
-    <div class="overlay" id="overlay" onclick="hideAllModals()"></div>
-
-    <div id="codeModal" class="code-modal">
-        <h2>🔐 Enter Secret Code</h2>
-        <input type="text" id="secretCode" placeholder="••••••••" />
-        <button class="btn" onclick="checkCode()">Unlock App</button>
-    </div>
-    
-    <div id="dialog" class="dialog-box"></div>
-
-    <div id="walletModal" class="wallet-modal">
-        <div class="wallet-modal-content">
-            <div class="wallet-header">
-                <img src="https://lh3.googleusercontent.com/a/ACg8ocJ-T7aBq4A1E-jB3B-qJbV9A8c7vG6F5E4D3C2B1A=s96-c" alt="User" class="profile-pic">
-                <div class="user-info">
-                    <h3>Loading...</h3>
-                    <p>Loading...</p>
-                </div>
-            </div>
-            <div class="wallet-balance">
-                <p>Your Current Balance</p>
-                <div class="coins">
-                    <i class="fa-solid fa-coins"></i>
-                    <span>...</span>
-                </div>
-            </div>
-            <div class="wallet-tabs">
-                <button class="wallet-tab active" id="transactionTab">Transactions</button>
-                <button class="wallet-tab" id="withdrawalTab">Withdrawals</button>
-            </div>
-            <div id="transactionHistoryContent" class="history-content">
-                <ul class="history-list"></ul>
-            </div>
-            <div id="withdrawalHistoryContent" class="history-content">
-                 <ul class="history-list"></ul>
-            </div>
-        </div>
-        <div class="wallet-footer">
-            <button class="btn">Withdraw Now</button>
-        </div>
-    </div>
+    <!-- Modals and Overlay -->
 
     <footer>
         © 2025 Revenue Aditya. All Rights Reserved.
@@ -205,29 +118,22 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3YmJiYWdhcm5xanZsdmdrcmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTE1MzEsImV4cCI6MjA3MjAyNzUzMX0.ioRBwk2r08zDg8q5LzAakMFpPYdEHnOKSGJQkZSeb30';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // --- NEW: AUTHENTICATION CHECK ---
-        // यह फंक्शन तुरंत यह जांचने के लिए चलता है कि उपयोगकर्ता लॉग इन है या नहीं।
+        // --- 2. AUTHENTICATION CHECK ---
         (async () => {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (!user) {
-                // यदि कोई उपयोगकर्ता लॉग इन नहीं है, तो लॉगिन पेज पर रीडायरेक्ट करें।
-                // सुनिश्चित करें कि 'login.html' आपके लॉगिन पेज का सही पाथ है।
                 window.location.href = 'login.html';
             }
         })();
 
-        // --- 2. AUTHENTICATION LISTENER (UPDATED) ---
+        // --- 3. AUTHENTICATION LISTENER ---
         supabaseClient.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN') {
-                console.log('User is signed in:', session.user);
-            } else if (event === 'SIGNED_OUT') {
-                console.log('User is signed out.');
-                // साइन आउट होने पर लॉगिन पेज पर रीडायरेक्ट करें
+            if (event === 'SIGNED_OUT') {
                 window.location.href = 'login.html';
             }
         });
 
-        // --- 3. ALL YOUR VARIABLES AND FUNCTIONS ---
+        // --- 4. ALL YOUR VARIABLES AND FUNCTIONS ---
         const overlay = document.getElementById("overlay");
         const codeModal = document.getElementById("codeModal");
         const dialogBox = document.getElementById("dialog");
@@ -276,9 +182,12 @@
             if (event.key === 'Enter') { checkCode(); }
         });
 
+        // --- UPDATED AND IMPROVED showWalletModal function ---
         async function showWalletModal() {
             overlay.classList.add("visible");
             walletModal.style.display = "block";
+
+            // Show loading state initially
             document.querySelector('.wallet-header .user-info h3').textContent = 'Loading...';
             document.querySelector('.wallet-header .user-info p').textContent = '...';
             document.querySelector('.wallet-balance .coins span').textContent = '...';
@@ -286,25 +195,35 @@
             const withdrawalList = document.querySelector('#withdrawalHistoryContent .history-list');
             transactionList.innerHTML = '<li class="history-empty">Loading...</li>';
             withdrawalList.innerHTML = '<li class="history-empty">Loading...</li>';
-
+            
+            // Re-fetch the current user to ensure we have the latest session
             const { data: { user } } = await supabaseClient.auth.getUser();
 
             if (user) {
-                const { data: profile } = await supabaseClient.from('profiles').select('username, balance, email').eq('id', user.id).single();
-                const { data: transactions } = await supabaseClient.from('transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+                // Fetch profile and transactions at the same time for speed
+                const [profileResponse, transactionsResponse] = await Promise.all([
+                    supabaseClient.from('profiles').select('username, balance, email').eq('id', user.id).single(),
+                    supabaseClient.from('transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+                ]);
 
-                if (profile) {
-                    document.querySelector('.wallet-header .user-info h3').textContent = profile.username || 'New User';
-                    document.querySelector('.wallet-header .user-info p').textContent = profile.email;
-                    document.querySelector('.wallet-balance .coins span').textContent = profile.balance.toLocaleString();
+                // Update Profile Info
+                if (profileResponse.error) {
+                    console.error('Error fetching profile:', profileResponse.error.message);
+                    document.querySelector('.wallet-header .user-info h3').textContent = 'Error';
+                    document.querySelector('.wallet-header .user-info p').textContent = 'Could not load data.';
+                } else if (profileResponse.data) {
+                    document.querySelector('.wallet-header .user-info h3').textContent = profileResponse.data.username || 'New User';
+                    document.querySelector('.wallet-header .user-info p').textContent = profileResponse.data.email;
+                    document.querySelector('.wallet-balance .coins span').textContent = profileResponse.data.balance.toLocaleString();
                 }
 
+                // Update Transactions History
                 transactionList.innerHTML = ''; 
                 withdrawalList.innerHTML = '';
                 let hasTransactions = false, hasWithdrawals = false;
-
-                if (transactions && transactions.length > 0) {
-                    transactions.forEach(tx => {
+                
+                if (transactionsResponse.data && transactionsResponse.data.length > 0) {
+                    transactionsResponse.data.forEach(tx => {
                         const date = new Date(tx.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                         const item = `<li class="history-item"><div class="info"><div class="title">${tx.description}</div><div class="date">${date}</div></div><div class="amount ${tx.type === 'credit' ? 'credit' : 'debit'}">${tx.type === 'credit' ? '+' : '-'} ${tx.amount}</div></li>`;
                         if(tx.type === 'credit'){ transactionList.innerHTML += item; hasTransactions = true; } 
@@ -314,13 +233,12 @@
                 
                 if (!hasTransactions) transactionList.innerHTML = '<li class="history-empty">No transactions yet.</li>';
                 if (!hasWithdrawals) withdrawalList.innerHTML = '<li class="history-empty">No withdrawal history yet.</li>';
+
             } else {
-                // यह हिस्सा अब नहीं चलेगा क्योंकि उपयोगकर्ता पहले ही रीडायरेक्ट हो जाएगा, 
-                // लेकिन इसे रखना सुरक्षित है।
-                document.querySelector('.wallet-header .user-info h3').textContent = 'Guest User';
-                document.querySelector('.wallet-balance .coins span').textContent = '0';
-                transactionList.innerHTML = '<li class="history-empty">Please log in.</li>';
-                withdrawalList.innerHTML = '<li class="history-empty">Please log in.</li>';
+                // This case should not happen due to page-level checks, but it's a good fallback
+                hideAllModals();
+                alert("Session expired. Please log in again.");
+                window.location.href = 'login.html';
             }
         }
         
