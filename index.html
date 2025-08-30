@@ -17,70 +17,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* --- Main Page Styles --- */
-        :root {
-            --bg-primary: #101010;
-            --bg-secondary: #1C1C1E;
-            --bg-tertiary: #2C2C2E;
-            --text-primary: #EAEAEA;
-            --text-secondary: #A0A0A0;
-            --accent-primary: #0A84FF;
-            --accent-secondary: #30D158;
-            --accent-error: #FF453A;
-            --font-main: 'Inter', sans-serif;
-            --font-mono: 'Roboto Mono', monospace;
-            --shadow-color: rgba(0, 0, 0, 0.25);
-            --border-radius: 16px;
-        }
-
+        /* All your CSS styles are here */
+        :root { --bg-primary: #101010; --bg-secondary: #1C1C1E; --bg-tertiary: #2C2C2E; --text-primary: #EAEAEA; --text-secondary: #A0A0A0; --accent-primary: #0A84FF; --accent-secondary: #30D158; --accent-error: #FF453A; --font-main: 'Inter', sans-serif; --font-mono: 'Roboto Mono', monospace; --shadow-color: rgba(0, 0, 0, 0.25); --border-radius: 16px; }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes modal-pop-in { from { opacity: 0; transform: translate(-50%, -48%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
-
-        body {
-            margin: 0;
-            font-family: var(--font-main);
-            background-color: var(--bg-primary);
-            color: var(--text-secondary);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
-        }
-
-        .background-gradient {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at 15% 25%, rgba(10, 132, 255, 0.1), transparent 40%),
-                        radial-gradient(circle at 85% 75%, rgba(48, 209, 88, 0.1), transparent 40%);
-        }
-
-        /* --- Header & Search Bar Styles --- */
-        .site-header {
-            padding: 20px;
-            background: rgba(28, 28, 30, 0.7);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--bg-tertiary);
-            animation: fadeInDown 0.8s ease-out;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: padding 0.4s ease;
-        }
-
+        body { margin: 0; font-family: var(--font-main); background-color: var(--bg-primary); color: var(--text-secondary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+        .background-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 15% 25%, rgba(10, 132, 255, 0.1), transparent 40%), radial-gradient(circle at 85% 75%, rgba(48, 209, 88, 0.1), transparent 40%); }
+        .site-header { padding: 20px; background: rgba(28, 28, 30, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid var(--bg-tertiary); animation: fadeInDown 0.8s ease-out; position: sticky; top: 0; z-index: 100; transition: padding 0.4s ease; }
         #header-content { text-align: center; transition: all 0.4s ease; max-height: 100px; }
         .brand-logo { display: inline-flex; align-items: center; gap: 12px; font-size: 24px; font-weight: bold; color: var(--text-primary); text-decoration: none; transition: all 0.4s ease; }
         .brand-logo img { height: 40px; width: 40px; border-radius: 50%; transition: all 0.4s ease; }
         .header-subtitle { font-size: 15px; color: var(--text-secondary); margin: 8px 0 20px 0; transition: all 0.4s ease; max-height: 25px; overflow: hidden; }
         .search-container { position: relative; display: flex; align-items: center; width: 100%; max-width: 600px; margin: 0 auto; transition: all 0.4s ease; }
         .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; transition: all 0.4s ease; }
-        
-        #searchInput {
-            width: 100%; padding: 15px 20px 15px 50px; background-color: var(--bg-secondary); border: 1px solid var(--bg-tertiary);
-            border-radius: 12px; color: var(--text-primary); font-size: 16px; outline: none; transition: all 0.3s ease; box-sizing: border-box; display: block;
-        }
+        #searchInput { width: 100%; padding: 15px 20px 15px 50px; background-color: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 12px; color: var(--text-primary); font-size: 16px; outline: none; transition: all 0.3s ease; box-sizing: border-box; display: block; }
         #searchInput:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2); }
         #cancelSearchBtn { background: none; border: none; color: var(--accent-primary); font-size: 16px; font-weight: 500; cursor: pointer; padding: 10px; margin-left: 10px; display: none; transition: opacity 0.3s ease; }
-        
         .search-active #header-content { opacity: 0; visibility: hidden; max-height: 0; margin: 0; }
         .search-active #cancelSearchBtn { display: block; }
         .site-header.scrolled:not(.search-active) { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding-top: 10px; padding-bottom: 10px; }
@@ -89,58 +42,29 @@
         .site-header.scrolled:not(.search-active) .search-container { width: auto; max-width: none; }
         .site-header.scrolled:not(.search-active) #searchInput { display: none; }
         .site-header.scrolled:not(.search-active) .search-icon { position: static; transform: none; pointer-events: auto; cursor: pointer; }
-
         .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 30px 20px 50px 20px; max-width: 1200px; margin: 0 auto; }
-        
-        .card {
-            background: rgba(28, 28, 30, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 30px; border-radius: var(--border-radius); border: 1px solid var(--bg-tertiary); display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 10px 30px var(--shadow-color); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-            position: relative; overflow: hidden; opacity: 0; animation: fadeInUp 0.5s ease-out forwards; width: 320px;
-        }
+        .card { background: rgba(28, 28, 30, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); padding: 30px; border-radius: var(--border-radius); border: 1px solid var(--bg-tertiary); display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 30px var(--shadow-color); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; position: relative; overflow: hidden; opacity: 0; animation: fadeInUp 0.5s ease-out forwards; width: 320px; }
         .card:nth-child(1) { animation-delay: 0.1s; } .card:nth-child(2) { animation-delay: 0.2s; } .card:nth-child(3) { animation-delay: 0.3s; }
         .card:nth-child(4) { animation-delay: 0.1s; } .card:nth-child(5) { animation-delay: 0.2s; } .card:nth-child(6) { animation-delay: 0.3s; }
-        
         .card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px var(--shadow-color); border-color: rgba(10, 132, 255, 0.5); }
         .card h2 { color: var(--text-primary); font-size: 22px; font-weight: 600; margin: 0 0 15px 0; display: flex; align-items: center;}
         .card p { font-size: 16px; line-height: 1.6; color: var(--text-secondary); flex-grow: 1; }
-
         .no-results { display: none; text-align: center; padding: 50px 20px; color: var(--text-secondary); width: 100%; }
         .no-results h2 { color: var(--text-primary); font-size: 24px; margin-bottom: 10px; }
         .no-results p { font-size: 16px; }
-
-        .btn {
-            background: var(--accent-primary); color: #fff; padding: 14px 24px; border: none; border-radius: 10px;
-            font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none; text-align: center;
-            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; display: block; margin-top: 20px;
-        }
+        .btn { background: var(--accent-primary); color: #fff; padding: 14px 24px; border: none; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none; text-align: center; transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; display: block; margin-top: 20px; }
         .btn:hover { background-color: #0077E0; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(10, 132, 255, 0.3); }
         .btn:active { transform: translateY(0px) scale(0.98); }
         .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); }
         .btn-secondary:hover { background: #3a3a3c; box-shadow: none; }
-        
-        .dialog-box, .code-modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); padding: 35px; border-radius: var(--border-radius);
-            color: var(--text-primary); width: 90%; max-width: 380px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5); z-index: 10000; display: none;
-            border: 1px solid var(--bg-tertiary); animation: modal-pop-in 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-        }
+        .dialog-box, .code-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); padding: 35px; border-radius: var(--border-radius); color: var(--text-primary); width: 90%; max-width: 380px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5); z-index: 10000; display: none; border: 1px solid var(--bg-tertiary); animation: modal-pop-in 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
         .dialog-box h3, .code-modal h2 { margin: 0 0 15px; font-size: 24px; font-weight: 600; }
         .dialog-box h3.success { color: var(--accent-secondary); } .dialog-box h3.error { color: var(--accent-error); }
         .dialog-box p { font-size: 16px; color: var(--text-secondary); line-height: 1.6; }
-        .code-modal input {
-            width: 100%; padding: 15px; font-size: 16px; border-radius: 10px; border: 1px solid var(--bg-tertiary); margin: 25px 0; background-color: var(--bg-primary);
-            color: var(--text-primary); outline: none; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; font-family: var(--font-mono); text-align: center;
-        }
+        .code-modal input { width: 100%; padding: 15px; font-size: 16px; border-radius: 10px; border: 1px solid var(--bg-tertiary); margin: 25px 0; background-color: var(--bg-primary); color: var(--text-primary); outline: none; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; font-family: var(--font-mono); text-align: center; }
         .code-modal input:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2); }
         .code-modal .btn { width: 100%; }
-
-        /* --- Wallet Modal Styles --- */
-        .wallet-modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); border-radius: 24px;
-            color: var(--text-primary); width: 90%; max-width: 420px; box-shadow: 0 15px 50px rgba(0,0,0,0.6); z-index: 10000; display: none;
-            border: 1px solid var(--bg-tertiary); animation: modal-pop-in 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-            overflow: hidden;
-        }
+        .wallet-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); border-radius: 24px; color: var(--text-primary); width: 90%; max-width: 420px; box-shadow: 0 15px 50px rgba(0,0,0,0.6); z-index: 10000; display: none; border: 1px solid var(--bg-tertiary); animation: modal-pop-in 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; overflow: hidden; }
         .wallet-modal-content { padding: 30px; }
         .wallet-header { display: flex; align-items: center; gap: 15px; padding-bottom: 25px; border-bottom: 1px solid var(--bg-tertiary); }
         .wallet-header .profile-pic { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-primary); }
@@ -150,11 +74,9 @@
         .wallet-balance p { margin: 0 0 10px; font-size: 16px; color: var(--text-secondary); }
         .wallet-balance .coins { font-size: 48px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; justify-content: center; gap: 10px; }
         .wallet-balance .coins i { font-size: 36px; color: #FFD700; }
-        
         .wallet-tabs { display: flex; background-color: var(--bg-tertiary); border-radius: 12px; padding: 5px; margin-bottom: 25px; }
         .wallet-tab { flex: 1; padding: 12px; text-align: center; background: transparent; border: none; color: var(--text-secondary); font-weight: 600; font-size: 15px; cursor: pointer; border-radius: 9px; transition: all 0.3s ease; }
         .wallet-tab.active { background: var(--bg-primary); color: var(--text-primary); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-
         .history-content { max-height: 150px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent-primary) var(--bg-tertiary); }
         .history-list { list-style: none; padding: 0; margin: 0; }
         .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid var(--bg-tertiary); }
@@ -165,22 +87,12 @@
         .history-item .amount.credit { color: var(--accent-secondary); }
         .history-item .amount.debit { color: var(--accent-error); }
         .history-empty { text-align: center; padding: 40px 0; color: var(--text-secondary); }
-
         #withdrawalHistoryContent { display: none; }
         .wallet-footer { padding: 30px; background-color: rgba(10,10,10, 0.4); border-top: 1px solid var(--bg-tertiary); }
         .wallet-footer .btn { margin-top: 0; }
-
-        .overlay {
-            position: fixed; top: 0; left: 0; height: 100%; width: 100%;
-            background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(8px); z-index: 9999;
-            display: none; opacity: 0; transition: opacity 0.3s ease;
-        }
+        .overlay { position: fixed; top: 0; left: 0; height: 100%; width: 100%; background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(8px); z-index: 9999; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .overlay.visible { display: block; opacity: 1; }
-
-        footer {
-            color: var(--text-secondary); margin-top: 80px; padding: 30px; font-size: 14px;
-            text-align: center; border-top: 1px solid var(--bg-tertiary);
-        }
+        footer { color: var(--text-secondary); margin-top: 80px; padding: 30px; font-size: 14px; text-align: center; border-top: 1px solid var(--bg-tertiary); }
     </style>
 </head>
 <body>
@@ -251,7 +163,6 @@
     
     <div id="dialog" class="dialog-box"></div>
 
-    <!-- Wallet Modal -->
     <div id="walletModal" class="wallet-modal">
         <div class="wallet-modal-content">
             <div class="wallet-header">
@@ -261,7 +172,6 @@
                     <p>Loading...</p>
                 </div>
             </div>
-
             <div class="wallet-balance">
                 <p>Your Current Balance</p>
                 <div class="coins">
@@ -269,22 +179,15 @@
                     <span>...</span>
                 </div>
             </div>
-
             <div class="wallet-tabs">
                 <button class="wallet-tab active" id="transactionTab">Transactions</button>
                 <button class="wallet-tab" id="withdrawalTab">Withdrawals</button>
             </div>
-
             <div id="transactionHistoryContent" class="history-content">
-                <ul class="history-list">
-                    <!-- Transactions will be loaded here -->
-                </ul>
+                <ul class="history-list"></ul>
             </div>
-
             <div id="withdrawalHistoryContent" class="history-content">
-                 <ul class="history-list">
-                    <!-- Withdrawals will be loaded here -->
-                </ul>
+                 <ul class="history-list"></ul>
             </div>
         </div>
         <div class="wallet-footer">
@@ -292,28 +195,22 @@
         </div>
     </div>
 
-
     <footer>
         © 2025 Revenue Aditya. All Rights Reserved.
     </footer>
 
-    <!-- ================================================================ -->
-    <!-- ============== FINAL JAVASCRIPT WITH SUPABASE ================== -->
-    <!-- ================================================================ -->
     <script>
-        // --- 1. SUPABASE CONNECTION INITIALIZATION ---
+        // --- 1. SUPABASE CONNECTION INITIALIZATION (FIXED) ---
         const SUPABASE_URL = 'https://jwbbbagarnqjvlvgkreg.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3YmJiYWdhcm5xanZsdmdrcmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTE1MzEsImV4cCI6MjA3MjAyNzUzMX0.ioRBwk2r08zDg8q5LzAakMFpPYdEHnOKSGJQkZSeb30';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); // **गलती यहाँ थी, `supabaseClient` कर दिया गया है**
 
         // --- 2. AUTHENTICATION LISTENER ---
-        supabase.auth.onAuthStateChange((event, session) => {
+        supabaseClient.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN') {
                 console.log('User is signed in:', session.user);
             } else if (event === 'SIGNED_OUT') {
                 console.log('User is signed out.');
-                // Optional: Redirect to login page on sign out
-                // window.location.href = '/login.html'; 
             }
         });
 
@@ -348,17 +245,16 @@
             const code = document.getElementById("secretCode").value.trim();
             const correctCode = "Add5677";
             const appUrl = "https://play.google.com/store/apps/details?id=com.phonepe.app";
-
             if (code === correctCode) {
                 hideAllModals();
                 setTimeout(() => {
-                    showDialog("success", "✅ Code Verified", "Redirecting to the secret app...");
+                    showDialog("success", "✅ Code Verified", "Redirecting...");
                     setTimeout(() => { window.location.href = appUrl; }, 2000); 
                 }, 200);
             } else {
                 hideAllModals();
                 setTimeout(() => {
-                    showDialog("error", "❌ Invalid Code", "The code you entered is incorrect. Please try again.");
+                    showDialog("error", "❌ Invalid Code", "Incorrect code. Please try again.");
                 }, 200);
             }
         }
@@ -367,94 +263,52 @@
             if (event.key === 'Enter') { checkCode(); }
         });
 
-        // --- 4. THE NEW, DYNAMIC WALLET FUNCTION ---
         async function showWalletModal() {
             overlay.classList.add("visible");
             walletModal.style.display = "block";
-
-            // Show loading state
             document.querySelector('.wallet-header .user-info h3').textContent = 'Loading...';
             document.querySelector('.wallet-header .user-info p').textContent = '...';
             document.querySelector('.wallet-balance .coins span').textContent = '...';
             const transactionList = document.querySelector('#transactionHistoryContent .history-list');
             const withdrawalList = document.querySelector('#withdrawalHistoryContent .history-list');
-            transactionList.innerHTML = '<li class="history-empty">Loading history...</li>';
-            withdrawalList.innerHTML = '<li class="history-empty">Loading history...</li>';
+            transactionList.innerHTML = '<li class="history-empty">Loading...</li>';
+            withdrawalList.innerHTML = '<li class="history-empty">Loading...</li>';
 
-            // 1. Get logged-in user
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data: { user } } = await supabaseClient.auth.getUser();
 
             if (user) {
-                // 2. Get user profile (balance and username)
-                const { data: profile, error: profileError } = await supabase
-                    .from('profiles')
-                    .select('username, balance, email')
-                    .eq('id', user.id)
-                    .single();
+                const { data: profile } = await supabaseClient.from('profiles').select('username, balance, email').eq('id', user.id).single();
+                const { data: transactions } = await supabaseClient.from('transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
 
-                // 3. Get user transactions
-                const { data: transactions, error: transactionsError } = await supabase
-                    .from('transactions')
-                    .select('description, created_at, amount, type')
-                    .eq('user_id', user.id)
-                    .order('created_at', { ascending: false });
-
-                // 4. Display profile info in wallet
                 if (profile) {
                     document.querySelector('.wallet-header .user-info h3').textContent = profile.username || 'New User';
                     document.querySelector('.wallet-header .user-info p').textContent = profile.email;
                     document.querySelector('.wallet-balance .coins span').textContent = profile.balance.toLocaleString();
                 }
 
-                // 5. Display transaction and withdrawal history
                 transactionList.innerHTML = ''; 
                 withdrawalList.innerHTML = '';
-
-                let hasTransactions = false;
-                let hasWithdrawals = false;
+                let hasTransactions = false, hasWithdrawals = false;
 
                 if (transactions && transactions.length > 0) {
                     transactions.forEach(tx => {
                         const date = new Date(tx.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                        const item = `
-                            <li class="history-item">
-                                <div class="info">
-                                    <div class="title">${tx.description}</div>
-                                    <div class="date">${date}</div>
-                                </div>
-                                <div class="amount ${tx.type === 'credit' ? 'credit' : 'debit'}">
-                                    ${tx.type === 'credit' ? '+' : '-'} ${tx.amount}
-                                </div>
-                            </li>`;
-                        
-                        if(tx.type === 'credit'){
-                            transactionList.innerHTML += item;
-                            hasTransactions = true;
-                        } else {
-                            withdrawalList.innerHTML += item;
-                            hasWithdrawals = true;
-                        }
+                        const item = `<li class="history-item"><div class="info"><div class="title">${tx.description}</div><div class="date">${date}</div></div><div class="amount ${tx.type === 'credit' ? 'credit' : 'debit'}">${tx.type === 'credit' ? '+' : '-'} ${tx.amount}</div></li>`;
+                        if(tx.type === 'credit'){ transactionList.innerHTML += item; hasTransactions = true; } 
+                        else { withdrawalList.innerHTML += item; hasWithdrawals = true; }
                     });
-                } 
+                }
                 
-                if (!hasTransactions) {
-                    transactionList.innerHTML = '<li class="history-empty">No transactions yet.</li>';
-                }
-                if (!hasWithdrawals) {
-                    withdrawalList.innerHTML = '<li class="history-empty">No withdrawal history yet.</li>';
-                }
-
+                if (!hasTransactions) transactionList.innerHTML = '<li class="history-empty">No transactions yet.</li>';
+                if (!hasWithdrawals) withdrawalList.innerHTML = '<li class="history-empty">No withdrawal history yet.</li>';
             } else {
-                // If user is not logged in
                 document.querySelector('.wallet-header .user-info h3').textContent = 'Guest User';
                 document.querySelector('.wallet-balance .coins span').textContent = '0';
-                transactionList.innerHTML = '<li class="history-empty">Please log in to see your wallet.</li>';
-                withdrawalList.innerHTML = '<li class="history-empty">Please log in to see your wallet.</li>';
+                transactionList.innerHTML = '<li class="history-empty">Please log in.</li>';
+                withdrawalList.innerHTML = '<li class="history-empty">Please log in.</li>';
             }
         }
         
-        // --- 5. YOUR OTHER EVENT LISTENERS ---
-        // Wallet Tab Switching Logic
         const transactionTab = document.getElementById('transactionTab');
         const withdrawalTab = document.getElementById('withdrawalTab');
         const transactionContent = document.getElementById('transactionHistoryContent');
@@ -497,16 +351,8 @@
                 noResultsMessage.style.display = resultsFound ? 'none' : 'block';
             };
 
-            const enterSearchMode = () => { 
-                siteHeader.classList.add('search-active'); 
-                if (window.innerWidth < 640) { searchInput.focus(); }
-            };
-            const exitSearchMode = () => {
-                siteHeader.classList.remove('search-active');
-                searchInput.value = '';
-                filterCards();
-                searchInput.blur();
-            };
+            const enterSearchMode = () => { siteHeader.classList.add('search-active'); if (window.innerWidth < 640) { searchInput.focus(); } };
+            const exitSearchMode = () => { siteHeader.classList.remove('search-active'); searchInput.value = ''; filterCards(); searchInput.blur(); };
             
             window.addEventListener('scroll', () => {
                 if(document.body.classList.contains('search-active')) return;
