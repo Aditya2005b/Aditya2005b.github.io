@@ -99,14 +99,101 @@
     <div class="background-gradient"></div>
 
     <header class="site-header" id="siteHeader">
-        <!-- Header Content -->
+        <div id="header-content">
+            <a href="#" class="brand-logo">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhsq2CqKsSh-HymMj11QzARRmYrJIJqfrjRzqde2EyHctMUyggM8LD3xFtH3zLjAKNrvAVrCjR-YIcy9zhVZHQogD_Kd58LDq1-DtMCEZ6gt4lyId1_Qn0KDgBCKrLKKUoHmXGOvRUW5OCc5dYbvLyn0-_XWzmuTeWOz4zuBvoiiAEcb42WntPVtdiWAdI0/s5120/1000162494_enhanced.png" alt="Logo">
+                Revenue Aditya
+            </a>
+            <p class="header-subtitle">Your daily guide to online earning.</p>
+        </div>
+        <div class="search-container">
+            <div class="search-icon" id="searchIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <input type="text" id="searchInput" placeholder="Search for apps, crypto, tricks...">
+            <button id="cancelSearchBtn">Cancel</button>
+        </div>
     </header>
 
     <div class="container" id="cards-container">
-        <!-- Cards Content -->
+        <div class="card">
+            <h2><i class="fa-solid fa-wallet" style="margin-right: 12px; color: var(--accent-primary);"></i>Wallet</h2>
+            <p>Manage your earnings, view transaction history, and withdraw funds securely.</p>
+            <a class="btn" href="javascript:void(0)" onclick="showWalletModal()">Open Wallet</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-solid fa-list-check" style="margin-right: 12px; color: var(--accent-secondary);"></i>Daily Tasks & Surveys</h2>
+            <p>Earn ₹20–₹100 daily with simple tasks, captchas, and quick surveys.</p>
+            <a class="btn btn-secondary" href="#">Do Now</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-brands fa-whatsapp" style="margin-right: 12px; color: #25D366;"></i>Join WhatsApp</h2>
+            <p>Get exclusive tricks, secret app alerts, and instant updates on WhatsApp.</p>
+            <a class="btn" href="https://whatsapp.com/channel/0029VbB1UnZAe5VkOLgTHv1k" target="_blank">Join Now</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-brands fa-youtube" style="margin-right: 12px; color: #FF0000;"></i>Subscribe on YouTube</h2>
+            <p>In-depth video guides, payment proofs, and installation tricks.</p>
+            <a class="btn" href="https://youtube.com/@revenue.aditya?si=nZS5FiJWIEN1KVnO" target="_blank">Subscribe</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-solid fa-key" style="margin-right: 12px; color: #FFD700;"></i>Unlock Secret App</h2>
+            <p>Enter the correct code to unveil a hidden high-earning application.</p>
+            <a class="btn" href="javascript:void(0)" onclick="showCodeModal()">Enter Code</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-solid fa-user-group" style="margin-right: 12px; color: #FF69B4;"></i>Refer & Earn</h2>
+            <p>Find the best referral programs and earn bonuses by inviting friends.</p>
+            <a class="btn btn-secondary" href="#">Explore Offers</a>
+        </div>
+        
+        <div class="no-results" id="noResultsMessage">
+            <h2>Oops! No results found</h2>
+            <p>We couldn't find any match for your search. Please try different keywords.</p>
+        </div>
     </div>
 
-    <!-- Modals and Overlay -->
+    <div class="overlay" id="overlay" onclick="hideAllModals()"></div>
+
+    <div id="codeModal" class="code-modal">
+        <h2>🔐 Enter Secret Code</h2>
+        <input type="text" id="secretCode" placeholder="••••••••" />
+        <button class="btn" onclick="checkCode()">Unlock App</button>
+    </div>
+    
+    <div id="dialog" class="dialog-box"></div>
+
+    <div id="walletModal" class="wallet-modal">
+        <div class="wallet-modal-content">
+            <div class="wallet-header">
+                <img src="https://lh3.googleusercontent.com/a/ACg8ocJ-T7aBq4A1E-jB3B-qJbV9A8c7vG6F5E4D3C2B1A=s96-c" alt="User" class="profile-pic">
+                <div class="user-info">
+                    <h3>Loading...</h3>
+                    <p>Loading...</p>
+                </div>
+            </div>
+            <div class="wallet-balance">
+                <p>Your Current Balance</p>
+                <div class="coins">
+                    <i class="fa-solid fa-coins"></i>
+                    <span>...</span>
+                </div>
+            </div>
+            <div class="wallet-tabs">
+                <button class="wallet-tab active" id="transactionTab">Transactions</button>
+                <button class="wallet-tab" id="withdrawalTab">Withdrawals</button>
+            </div>
+            <div id="transactionHistoryContent" class="history-content">
+                <ul class="history-list"></ul>
+            </div>
+            <div id="withdrawalHistoryContent" class="history-content">
+                 <ul class="history-list"></ul>
+            </div>
+        </div>
+        <div class="wallet-footer">
+            <button class="btn">Withdraw Now</button>
+        </div>
+    </div>
 
     <footer>
         © 2025 Revenue Aditya. All Rights Reserved.
@@ -125,7 +212,7 @@
                 window.location.href = 'login.html';
             }
         })();
-
+        
         // --- 3. AUTHENTICATION LISTENER ---
         supabaseClient.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_OUT') {
