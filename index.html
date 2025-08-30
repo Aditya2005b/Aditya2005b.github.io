@@ -3,121 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <title>Revenue Aditya | Home</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* All your CSS styles remain the same */
-        :root { --bg-primary: #101010; --bg-secondary: #1C1C1E; --text-primary: #EAEAEA; --text-secondary: #A0A0A0; --accent-primary: #0A84FF; --accent-secondary: #30D158; --accent-error: #FF453A; --border-radius: 16px; }
-        body { margin: 0; font-family: sans-serif; background-color: var(--bg-primary); color: var(--text-secondary); }
-        .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 30px 20px; max-width: 1200px; margin: 0 auto; }
-        .card { background: rgba(28, 28, 30, 0.6); padding: 30px; border-radius: var(--border-radius); border: 1px solid #2C2C2E; display: flex; flex-direction: column; width: 320px; }
-        .btn { background: var(--accent-primary); color: #fff; padding: 14px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center; display: block; margin-top: 20px; }
-        .overlay { position: fixed; top: 0; left: 0; height: 100%; width: 100%; background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(8px); z-index: 9999; display: none; }
-        .wallet-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); border-radius: 24px; width: 90%; max-width: 420px; z-index: 10000; display: none; }
-        .wallet-modal-content { padding: 30px; }
-        .wallet-header { display: flex; align-items: center; gap: 15px; padding-bottom: 25px; border-bottom: 1px solid #2C2C2E; }
-        .wallet-header .user-info h3 { margin: 0; font-size: 20px; color:var(--text-primary); }
-        .wallet-balance { text-align: center; padding: 30px 0; }
-        .wallet-balance .coins { font-size: 48px; font-weight: 700; color: var(--text-primary); }
-        .history-list { list-style: none; padding: 0; margin: 0; }
-        .history-item { display: flex; justify-content: space-between; padding: 15px 5px; border-bottom: 1px solid #2C2C2E; }
-        .history-item .amount.credit { color: var(--accent-secondary); }
-        .history-item .amount.debit { color: var(--accent-error); }
-        .history-empty { text-align: center; padding: 40px 0; }
+        :root {
+            --bg-primary: #101010;
+            --bg-secondary: #1C1C1E;
+            --bg-tertiary: #2C2C2E;
+            --text-primary: #EAEAEA;
+            --text-secondary: #A0A0A0;
+            --accent-primary: #0A84FF;
+            --accent-secondary: #30D158;
+            --accent-error: #FF453A;
+            --font-main: 'Inter', sans-serif;
+            --border-radius: 16px;
+        }
+        body {
+            margin: 0;
+            font-family: var(--font-main);
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(28, 28, 30, 0.6);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--bg-tertiary);
+            display: flex;
+            flex-direction: column;
+            width: 320px;
+        }
+        .card h2 {
+            color: var(--text-primary);
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card p {
+            flex-grow: 1;
+        }
+        .btn {
+            background: var(--accent-primary);
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            margin-top: 20px;
+        }
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+        }
+        .wallet-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 440px;
+            z-index: 10000;
+            display: none;
+        }
+        .wallet-modal-content {
+            padding: 30px;
+        }
+        .wallet-modal .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-primary);
+        }
+        .wallet-modal .user-info h3 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .wallet-modal .user-info p {
+            margin: 4px 0 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .wallet-modal .wallet-balance {
+            text-align: center;
+            padding: 30px 0;
+        }
+        .wallet-modal .wallet-balance p {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        .wallet-modal .wallet-balance .coins {
+            font-size: 48px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+        .wallet-modal .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            color: var(--text-secondary);
+        }
+        .wallet-modal .history-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        .wallet-modal .history-list li:last-child {
+            border-bottom: none;
+        }
+        .wallet-modal .history-list li .amount {
+            font-weight: 600;
+        }
+        .wallet-modal .history-list li .amount.credit {
+            color: var(--accent-secondary);
+        }
+        .wallet-modal .history-list li .amount.debit {
+            color: var(--accent-error);
+        }
+        .wallet-modal .history-empty {
+            text-align: center;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
-    <!-- Header, Cards, and other HTML elements -->
-    <div class="container">
-        <div class="card">
-            <h2><i class="fa-solid fa-wallet" style="margin-right: 12px; color: var(--accent-primary);"></i>Wallet</h2>
-            <p>Manage your earnings and view history.</p>
-            <a class="btn" href="javascript:void(0)" onclick="showWalletModal()">Open Wallet</a>
-        </div>
-         <div class="card">
-            <h2><i class="fa-solid fa-right-from-bracket" style="margin-right: 12px; color: var(--accent-error);"></i>Logout</h2>
-            <p>Click here to sign out from your account.</p>
-            <a class="btn" href="javascript:void(0)" onclick="signOutUser()">Logout</a>
-        </div>
+<header class="site-header" id="siteHeader">
+    <div id="header-content">
+        <a href="#" class="brand-logo">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhsq2CqKsSh-HymMj11QzARRmYrJIJqfrjRzqde2EyHctMUyggM8LD3xFtH3zLjAKNrvAVrCjR-YIcy9zhVZHQogD_Kd58LDq1-DtMCEZ6gt4lyId1_Qn0KDgBCKrLKKUoHmXGOvRUW5OCc5dYbvLyn0-_XWzmuTeWOz4zuBvoiiAEcb42WntPVtdiWAdI0/s5120/1000162494_enhanced.png" alt="Logo">
+            Revenue Aditya
+        </a>
+        <p class="header-subtitle">Your daily guide to online earning.</p>
     </div>
-    
-    <div class="overlay" id="overlay" onclick="hideWalletModal()"></div>
+    <div class="search-container">
+        <div class="search-icon" id="searchIcon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </div>
+        <input type="text" id="searchInput" placeholder="Search apps, crypto, tricks...">
+        <button id="cancelBtn">Cancel</button>
+    </div>
+</header>
 
-    <div id="walletModal" class="wallet-modal">
-        <div class="wallet-modal-content">
-            <div class="wallet-header">
-                <div class="user-info">
-                    <h3 id="wallet-username">Loading...</h3>
-                    <p id="wallet-email">...</p>
-                </div>
-            </div>
-            <div class="wallet-balance">
-                <p>Your Current Balance</p>
-                <div class="coins" id="wallet-balance">...</div>
-            </div>
-            <h4>Transactions</h4>
-            <ul id="wallet-transactions" class="history-list"></ul>
-        </div>
+<div class="container" id="cards">
+    <div class="card">
+        <h2><i class="fas fa-wallet"></i> Wallet</h2>
+        <p>Manage your earnings and transactions.</p>
+        <button class="btn" onclick="openWallet()">Open Wallet</button>
     </div>
+    <div class="card">
+        <h2><i class="fas fa-tasks"></i> Daily Tasks</h2>
+        <p>Add new tasks and earn coins.</p>
+        <button class="btn btn-secondary">Do Now</button>
+    </div>
+    <div class="card">
+        <h2><i class="fab fa-whatsapp"></i> Join WhatsApp</h2>
+        <p>Join our exclusive WhatsApp group.</p>
+        <a href="https://whatsapp.com/channel/0029VbB1UnZAe5VkOLgTHv1k" class="btn" target="_blank">Join Now</a>
+    </div>
+    <div class="card">
+        <h2><i class="fab fa-youtube"></i> Subscribe</h2>
+        <p>Subscribe to our channel for updates.</p>
+        <a href="https://youtube.com/@revenue.aditya?si=nZS5FiJWIEN1KVnO" class="btn" target="_blank">Subscribe</a>
+    </div>
+    <div class="card">
+        <h2><i class="fas fa-key"></i> Unlock App</h2>
+        <p>Enter secret code to unlock.</p>
+        <button class="btn" onclick="showCodeModal()">Unlock</button>
+    </div>
+    <div class="card">
+        <h2><i class="fas fa-users"></i> Refer & Earn</h2>
+        <p>Invite friends and earn bonus coins.</p>
+        <button class="btn btn-secondary">Refer Now</button>
+    </div>
+    <div class="card">
+        <h2><i class="fas fa-sign-out-alt"></i> Logout</h2>
+        <p>Sign out of your account.</p>
+        <button class="btn" onclick="logoutUser()">Logout</button>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="wallet-modal" id="walletModal">
+    <div class="wallet-modal-content">
+        <div class="wallet-header">
+            <img id="userAvatar" src="" alt="User Avatar" />
+            <div class="user-info">
+                <h3 id="userName">...</h3>
+                <p id="userEmail">...</p>
+            </div>
+        </div>
+        <div class="wallet-balance">
+            <p>Your Balance</p>
+            <div id="balance" class="coins"><i class="fas fa-coins"></i> ...</div>
+        </div>
+        <div>
+            <button id="transactionTab" class="wallet-tab active">Transactions</button>
+            <button id="withdrawalTab" class="wallet-tab">Withdrawals</button>
+        </div>
+        <div id="transactionContent" class="history-list"></div>
+        <div id="withdrawalContent" class="history-list" style="display:none"></div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2025 Revenue Aditya</p>
+</footer>
 
 <script>
-    // --- 1. SUPABASE CONNECTION ---
-    const SUPABASE_URL = 'https://jwbbbagarnqjvlvgkreg.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3YmJiYWdhcm5xanZsdmdrcmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTE1MzEsImV4cCI6MjA3MjAyNzUzMX0.ioRBwk2r08zDg8q5LzAakMFpPYdEHnOKSGJQkZSeb30';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL = 'https://jwdbnlhdssnrchuvtwmy.supabase.co';
+const SUPABASE_KEY = 'your_anon_key_here';
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // --- 2. ROUTE PROTECTION ---
-    (async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            // अगर यूजर लॉग-इन नहीं है, तो उसे लॉगिन पेज पर भेज दो
-            window.location.href = 'login.html'; // **यहाँ अपने लॉगिन पेज का सही नाम डालें**
-        }
-    })();
-    
-    // --- 3. FUNCTIONS ---
-    const overlay = document.getElementById("overlay");
-    const walletModal = document.getElementById("walletModal");
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.href = 'login.html';
+  }
+})();
 
-    async function showWalletModal() {
-        overlay.style.display = "block";
-        walletModal.style.display = "block";
+const walletModal = document.getElementById('walletModal');
+const overlay = document.getElementById('overlay');
 
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            const { data: profile } = await supabase.from('profiles').select('username, balance, email').eq('id', user.id).single();
-            const { data: transactions } = await supabase.from('transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+const transactionTab = document.getElementById('transactionTab');
+const withdrawalTab = document.getElementById('withdrawalTab');
 
-            document.getElementById('wallet-username').textContent = profile.username || 'New User';
-            document.getElementById('wallet-email').textContent = profile.email;
-            document.getElementById('wallet-balance').textContent = profile.balance.toLocaleString();
+const transactionContent = document.getElementById('transactionContent');
+const withdrawalContent = document.getElementById('withdrawalContent');
 
-            const transactionList = document.getElementById('wallet-transactions');
-            transactionList.innerHTML = '';
-            if (transactions && transactions.length > 0) {
-                transactions.forEach(tx => {
-                    const item = document.createElement('li');
-                    item.className = 'history-item';
-                    item.innerHTML = `<div>${tx.description}</div> <div class="amount ${tx.type}">${tx.type === 'credit' ? '+' : '-'}${tx.amount}</div>`;
-                    transactionList.appendChild(item);
-                });
-            } else {
-                transactionList.innerHTML = '<li class="history-empty">No transactions yet.</li>';
-            }
-        }
-    }
-    
-    function hideWalletModal() {
-        overlay.style.display = "none";
-        walletModal.style.display = "none";
-    }
+transactionTab.addEventListener('click', () => {
+  transactionTab.classList.add('active');
+  withdrawalTab.classList.remove('active');
+  transactionContent.style.display = 'block';
+  withdrawalContent.style.display = 'none';
+});
 
-    async function signOutUser() {
-        await supabase.auth.signOut();
-        window.location.href = 'login.html'; // **यहाँ भी अपने लॉगिन पेज का सही नाम डालें**
-    }
+withdrawalTab.addEventListener('click', () => {
+  withdrawalTab.classList.add('active');
+  transactionTab.classList.remove('active');
+  withdrawalContent.style.display = 'block';
+  transactionContent.style.display = 'none';
+});
+
+async function openWallet() {
+  overlay.style.display = 'block';
+  walletModal.style.display = 'block';
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if(user) {
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    const { data: transactions } = await supabase.from('transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+
+    document.getElementById('userName').innerText = profile.username || 'User';
+    document.getElementById('userEmail').innerText = profile.email || user.email;
+    document.getElementById('balance').innerText = profile.balance || 0;
+
+    transactionContent.innerHTML = '';
+    transactions.forEach(tx => {
+      const el = document.createElement('div');
+      el.innerText = `${tx.description} ${tx.amount} (${tx.type})`;
+      transactionContent.appendChild(el);
+    });
+
+    withdrawalContent.innerHTML = 'No Withdrawals';
+  }
+}
+
+function closeWallet() {
+  overlay.style.display = 'none';
+  walletModal.style.display = 'none';
+}
+
+async function logoutUser() {
+  await supabase.auth.signOut();
+  window.location.href = 'login.html';
+}
+
 </script>
+
 </body>
 </html>
