@@ -1,324 +1,393 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Revenue Aditya | Home</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Revenue Aditya | Premium Earning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Earning Apps, Crypto Tips, and Online Tricks - All in one place!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- SUPABASE LIBRARY -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
-        :root {
-            --bg-primary: #101010;
-            --bg-secondary: #1C1C1E;
-            --bg-tertiary: #2C2C2E;
-            --text-primary: #EAEAEA;
-            --text-secondary: #A0A0A0;
-            --accent-primary: #0A84FF;
-            --accent-secondary: #30D158;
-            --accent-error: #FF453A;
-            --font-main: 'Inter', sans-serif;
-            --border-radius: 16px;
-        }
-        body {
-            margin: 0;
-            font-family: var(--font-main);
-            background-color: var(--bg-primary);
-            color: var(--text-secondary);
-        }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            padding: 30px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .card {
-            background: rgba(28, 28, 30, 0.6);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--bg-tertiary);
-            display: flex;
-            flex-direction: column;
-            width: 320px;
-        }
-        .card h2 {
-            color: var(--text-primary);
-            font-size: 22px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .card p {
-            flex-grow: 1;
-        }
-        .btn {
-            background: var(--accent-primary);
-            color: #fff;
-            padding: 14px 24px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-            display: block;
-            margin-top: 20px;
-        }
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 9999;
-            display: none;
-        }
-        .wallet-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            width: 90%;
-            max-width: 440px;
-            z-index: 10000;
-            display: none;
-        }
-        .wallet-modal-content {
-            padding: 30px;
-        }
-        .wallet-modal .profile-pic {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent-primary);
-        }
-        .wallet-modal .user-info h3 {
-            margin: 0;
-            color: var(--text-primary);
-            font-size: 20px;
-            font-weight: 600;
-        }
-        .wallet-modal .user-info p {
-            margin: 4px 0 0;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-        .wallet-modal .wallet-balance {
-            text-align: center;
-            padding: 30px 0;
-        }
-        .wallet-modal .wallet-balance p {
-            margin: 0 0 10px;
-            font-size: 16px;
-            color: var(--text-secondary);
-        }
-        .wallet-modal .wallet-balance .coins {
-            font-size: 48px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            color: var(--text-primary);
-        }
-        .wallet-modal .history-list {
-            max-height: 200px;
-            overflow-y: auto;
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            color: var(--text-secondary);
-        }
-        .wallet-modal .history-list li {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid var(--bg-tertiary);
-        }
-        .wallet-modal .history-list li:last-child {
-            border-bottom: none;
-        }
-        .wallet-modal .history-list li .amount {
-            font-weight: 600;
-        }
-        .wallet-modal .history-list li .amount.credit {
-            color: var(--accent-secondary);
-        }
-        .wallet-modal .history-list li .amount.debit {
-            color: var(--accent-error);
-        }
-        .wallet-modal .history-empty {
-            text-align: center;
-            padding: 20px;
-        }
+        /* All your CSS styles are here */
+        :root { --bg-primary: #101010; --bg-secondary: #1C1C1E; --bg-tertiary: #2C2C2E; --text-primary: #EAEAEA; --text-secondary: #A0A0A0; --accent-primary: #0A84FF; --accent-secondary: #30D158; --accent-error: #FF453A; --font-main: 'Inter', sans-serif; --font-mono: 'Roboto Mono', monospace; --shadow-color: rgba(0, 0, 0, 0.25); --border-radius: 16px; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modal-pop-in { from { opacity: 0; transform: translate(-50%, -48%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        body { margin: 0; font-family: var(--font-main); background-color: var(--bg-primary); color: var(--text-secondary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+        .background-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 15% 25%, rgba(10, 132, 255, 0.1), transparent 40%), radial-gradient(circle at 85% 75%, rgba(48, 209, 88, 0.1), transparent 40%); }
+        .site-header { padding: 20px; background: rgba(28, 28, 30, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid var(--bg-tertiary); animation: fadeInDown 0.8s ease-out; position: sticky; top: 0; z-index: 100; transition: padding 0.4s ease; }
+        #header-content { text-align: center; transition: all 0.4s ease; max-height: 100px; }
+        .brand-logo { display: inline-flex; align-items: center; gap: 12px; font-size: 24px; font-weight: bold; color: var(--text-primary); text-decoration: none; transition: all 0.4s ease; }
+        .brand-logo img { height: 40px; width: 40px; border-radius: 50%; transition: all 0.4s ease; }
+        .header-subtitle { font-size: 15px; color: var(--text-secondary); margin: 8px 0 20px 0; transition: all 0.4s ease; max-height: 25px; overflow: hidden; }
+        .search-container { position: relative; display: flex; align-items: center; width: 100%; max-width: 600px; margin: 0 auto; transition: all 0.4s ease; }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; transition: all 0.4s ease; }
+        #searchInput { width: 100%; padding: 15px 20px 15px 50px; background-color: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 12px; color: var(--text-primary); font-size: 16px; outline: none; transition: all 0.3s ease; box-sizing: border-box; display: block; }
+        #searchInput:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2); }
+        #cancelSearchBtn { background: none; border: none; color: var(--accent-primary); font-size: 16px; font-weight: 500; cursor: pointer; padding: 10px; margin-left: 10px; display: none; transition: opacity 0.3s ease; }
+        .search-active #header-content { opacity: 0; visibility: hidden; max-height: 0; margin: 0; }
+        .search-active #cancelSearchBtn { display: block; }
+        .site-header.scrolled:not(.search-active) { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding-top: 10px; padding-bottom: 10px; }
+        .site-header.scrolled:not(.search-active) #header-content { text-align: left; }
+        .site-header.scrolled:not(.search-active) .header-subtitle { opacity: 0; visibility: hidden; max-height: 0; margin: 0; }
+        .site-header.scrolled:not(.search-active) .search-container { width: auto; max-width: none; }
+        .site-header.scrolled:not(.search-active) #searchInput { display: none; }
+        .site-header.scrolled:not(.search-active) .search-icon { position: static; transform: none; pointer-events: auto; cursor: pointer; }
+        .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 30px 20px 50px 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background: rgba(28, 28, 30, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); padding: 30px; border-radius: var(--border-radius); border: 1px solid var(--bg-tertiary); display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 30px var(--shadow-color); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; position: relative; overflow: hidden; opacity: 0; animation: fadeInUp 0.5s ease-out forwards; width: 320px; }
+        .card:nth-child(1) { animation-delay: 0.1s; } .card:nth-child(2) { animation-delay: 0.2s; } .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.1s; } .card:nth-child(5) { animation-delay: 0.2s; } .card:nth-child(6) { animation-delay: 0.3s; }
+        .card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px var(--shadow-color); border-color: rgba(10, 132, 255, 0.5); }
+        .card h2 { color: var(--text-primary); font-size: 22px; font-weight: 600; margin: 0 0 15px 0; display: flex; align-items: center;}
+        .card p { font-size: 16px; line-height: 1.6; color: var(--text-secondary); flex-grow: 1; }
+        .no-results { display: none; text-align: center; padding: 50px 20px; color: var(--text-secondary); width: 100%; }
+        .no-results h2 { color: var(--text-primary); font-size: 24px; margin-bottom: 10px; }
+        .no-results p { font-size: 16px; }
+        .btn { background: var(--accent-primary); color: #fff; padding: 14px 24px; border: none; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none; text-align: center; transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; display: block; margin-top: 20px; }
+        .btn:hover { background-color: #0077E0; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(10, 132, 255, 0.3); }
+        .btn:active { transform: translateY(0px) scale(0.98); }
+        .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); }
+        .btn-secondary:hover { background: #3a3a3c; box-shadow: none; }
+        .dialog-box, .code-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); padding: 35px; border-radius: var(--border-radius); color: var(--text-primary); width: 90%; max-width: 380px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5); z-index: 10000; display: none; border: 1px solid var(--bg-tertiary); animation: modal-pop-in 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+        .dialog-box h3, .code-modal h2 { margin: 0 0 15px; font-size: 24px; font-weight: 600; }
+        .dialog-box h3.success { color: var(--accent-secondary); } .dialog-box h3.error { color: var(--accent-error); }
+        .dialog-box p { font-size: 16px; color: var(--text-secondary); line-height: 1.6; }
+        .code-modal input { width: 100%; padding: 15px; font-size: 16px; border-radius: 10px; border: 1px solid var(--bg-tertiary); margin: 25px 0; background-color: var(--bg-primary); color: var(--text-primary); outline: none; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; font-family: var(--font-mono); text-align: center; }
+        .code-modal input:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2); }
+        .code-modal .btn { width: 100%; }
+        .wallet-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-secondary); border-radius: 24px; color: var(--text-primary); width: 90%; max-width: 420px; box-shadow: 0 15px 50px rgba(0,0,0,0.6); z-index: 10000; display: none; border: 1px solid var(--bg-tertiary); animation: modal-pop-in 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; overflow: hidden; }
+        .wallet-modal-content { padding: 30px; }
+        .wallet-header { display: flex; align-items: center; gap: 15px; padding-bottom: 25px; border-bottom: 1px solid var(--bg-tertiary); }
+        .wallet-header .profile-pic { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-primary); }
+        .wallet-header .user-info h3 { margin: 0; font-size: 20px; font-weight: 600; }
+        .wallet-header .user-info p { margin: 4px 0 0; font-size: 14px; color: var(--text-secondary); }
+        .wallet-balance { text-align: center; padding: 30px 0; }
+        .wallet-balance p { margin: 0 0 10px; font-size: 16px; color: var(--text-secondary); }
+        .wallet-balance .coins { font-size: 48px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .wallet-balance .coins i { font-size: 36px; color: #FFD700; }
+        .wallet-tabs { display: flex; background-color: var(--bg-tertiary); border-radius: 12px; padding: 5px; margin-bottom: 25px; }
+        .wallet-tab { flex: 1; padding: 12px; text-align: center; background: transparent; border: none; color: var(--text-secondary); font-weight: 600; font-size: 15px; cursor: pointer; border-radius: 9px; transition: all 0.3s ease; }
+        .wallet-tab.active { background: var(--bg-primary); color: var(--text-primary); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .history-content { max-height: 150px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent-primary) var(--bg-tertiary); }
+        .history-list { list-style: none; padding: 0; margin: 0; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid var(--bg-tertiary); }
+        .history-item:last-child { border-bottom: none; }
+        .history-item .info .title { font-weight: 600; margin-bottom: 4px; }
+        .history-item .info .date { font-size: 13px; color: var(--text-secondary); }
+        .history-item .amount { font-weight: 600; font-size: 16px; }
+        .history-item .amount.credit { color: var(--accent-secondary); }
+        .history-item .amount.debit { color: var(--accent-error); }
+        .history-empty { text-align: center; padding: 40px 0; color: var(--text-secondary); }
+        #withdrawalHistoryContent { display: none; }
+        .wallet-footer { padding: 30px; background-color: rgba(10,10,10, 0.4); border-top: 1px solid var(--bg-tertiary); }
+        .wallet-footer .btn { margin-top: 0; }
+        .overlay { position: fixed; top: 0; left: 0; height: 100%; width: 100%; background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(8px); z-index: 9999; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .overlay.visible { display: block; opacity: 1; }
+        footer { color: var(--text-secondary); margin-top: 80px; padding: 30px; font-size: 14px; text-align: center; border-top: 1px solid var(--bg-tertiary); }
     </style>
 </head>
 <body>
-<header class="site-header" id="siteHeader">
-    <div id="header-content">
-        <a href="#" class="brand-logo">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhsq2CqKsSh-HymMj11QzARRmYrJIJqfrjRzqde2EyHctMUyggM8LD3xFtH3zLjAKNrvAVrCjR-YIcy9zhVZHQogD_Kd58LDq1-DtMCEZ6gt4lyId1_Qn0KDgBCKrLKKUoHmXGOvRUW5OCc5dYbvLyn0-_XWzmuTeWOz4zuBvoiiAEcb42WntPVtdiWAdI0/s5120/1000162494_enhanced.png" alt="Logo">
-            Revenue Aditya
-        </a>
-        <p class="header-subtitle">Your daily guide to online earning.</p>
-    </div>
-    <div class="search-container">
-        <div class="search-icon" id="searchIcon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <div class="background-gradient"></div>
+
+    <header class="site-header" id="siteHeader">
+        <div id="header-content">
+            <a href="#" class="brand-logo">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhsq2CqKsSh-HymMj11QzARRmYrJIJqfrjRzqde2EyHctMUyggM8LD3xFtH3zLjAKNrvAVrCjR-YIcy9zhVZHQogD_Kd58LDq1-DtMCEZ6gt4lyId1_Qn0KDgBCKrLKKUoHmXGOvRUW5OCc5dYbvLyn0-_XWzmuTeWOz4zuBvoiiAEcb42WntPVtdiWAdI0/s5120/1000162494_enhanced.png" alt="Logo">
+                Revenue Aditya
+            </a>
+            <p class="header-subtitle">Your daily guide to online earning.</p>
         </div>
-        <input type="text" id="searchInput" placeholder="Search apps, crypto, tricks...">
-        <button id="cancelBtn">Cancel</button>
-    </div>
-</header>
+        <div class="search-container">
+            <div class="search-icon" id="searchIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <input type="text" id="searchInput" placeholder="Search for apps, crypto, tricks...">
+            <button id="cancelSearchBtn">Cancel</button>
+        </div>
+    </header>
 
-<div class="container" id="cards">
-    <div class="card">
-        <h2><i class="fas fa-wallet"></i> Wallet</h2>
-        <p>Manage your earnings and transactions.</p>
-        <button class="btn" onclick="openWallet()">Open Wallet</button>
+    <div class="container" id="cards-container">
+        <div class="card">
+            <h2><i class="fa-solid fa-wallet" style="margin-right: 12px; color: var(--accent-primary);"></i>Wallet</h2>
+            <p>Manage your earnings, view transaction history, and withdraw funds securely.</p>
+            <a class="btn" href="javascript:void(0)" onclick="showWalletModal()">Open Wallet</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-solid fa-list-check" style="margin-right: 12px; color: var(--accent-secondary);"></i>Daily Tasks & Surveys</h2>
+            <p>Earn ₹20–₹100 daily with simple tasks, captchas, and quick surveys.</p>
+            <a class="btn btn-secondary" href="#">Do Now</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-brands fa-whatsapp" style="margin-right: 12px; color: #25D366;"></i>Join WhatsApp</h2>
+            <p>Get exclusive tricks, secret app alerts, and instant updates on WhatsApp.</p>
+            <a class="btn" href="https://whatsapp.com/channel/0029VbB1UnZAe5VkOLgTHv1k" target="_blank">Join Now</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-brands fa-youtube" style="margin-right: 12px; color: #FF0000;"></i>Subscribe on YouTube</h2>
+            <p>In-depth video guides, payment proofs, and installation tricks.</p>
+            <a class="btn" href="https://youtube.com/@revenue.aditya?si=nZS5FiJWIEN1KVnO" target="_blank">Subscribe</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-solid fa-key" style="margin-right: 12px; color: #FFD700;"></i>Unlock Secret App</h2>
+            <p>Enter the correct code to unveil a hidden high-earning application.</p>
+            <a class="btn" href="javascript:void(0)" onclick="showCodeModal()">Enter Code</a>
+        </div>
+        <div class="card">
+            <h2><i class="fa-solid fa-user-group" style="margin-right: 12px; color: #FF69B4;"></i>Refer & Earn</h2>
+            <p>Find the best referral programs and earn bonuses by inviting friends.</p>
+            <a class="btn btn-secondary" href="#">Explore Offers</a>
+        </div>
+        
+        <div class="no-results" id="noResultsMessage">
+            <h2>Oops! No results found</h2>
+            <p>We couldn't find any match for your search. Please try different keywords.</p>
+        </div>
     </div>
-    <div class="card">
-        <h2><i class="fas fa-tasks"></i> Daily Tasks</h2>
-        <p>Add new tasks and earn coins.</p>
-        <button class="btn btn-secondary">Do Now</button>
-    </div>
-    <div class="card">
-        <h2><i class="fab fa-whatsapp"></i> Join WhatsApp</h2>
-        <p>Join our exclusive WhatsApp group.</p>
-        <a href="https://whatsapp.com/channel/0029VbB1UnZAe5VkOLgTHv1k" class="btn" target="_blank">Join Now</a>
-    </div>
-    <div class="card">
-        <h2><i class="fab fa-youtube"></i> Subscribe</h2>
-        <p>Subscribe to our channel for updates.</p>
-        <a href="https://youtube.com/@revenue.aditya?si=nZS5FiJWIEN1KVnO" class="btn" target="_blank">Subscribe</a>
-    </div>
-    <div class="card">
-        <h2><i class="fas fa-key"></i> Unlock App</h2>
-        <p>Enter secret code to unlock.</p>
-        <button class="btn" onclick="showCodeModal()">Unlock</button>
-    </div>
-    <div class="card">
-        <h2><i class="fas fa-users"></i> Refer & Earn</h2>
-        <p>Invite friends and earn bonus coins.</p>
-        <button class="btn btn-secondary">Refer Now</button>
-    </div>
-    <div class="card">
-        <h2><i class="fas fa-sign-out-alt"></i> Logout</h2>
-        <p>Sign out of your account.</p>
-        <button class="btn" onclick="logoutUser()">Logout</button>
-    </div>
-</div>
 
-<div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay" onclick="hideAllModals()"></div>
 
-<div class="wallet-modal" id="walletModal">
-    <div class="wallet-modal-content">
-        <div class="wallet-header">
-            <img id="userAvatar" src="" alt="User Avatar" />
-            <div class="user-info">
-                <h3 id="userName">...</h3>
-                <p id="userEmail">...</p>
+    <div id="codeModal" class="code-modal">
+        <h2>🔐 Enter Secret Code</h2>
+        <input type="text" id="secretCode" placeholder="••••••••" />
+        <button class="btn" onclick="checkCode()">Unlock App</button>
+    </div>
+    
+    <div id="dialog" class="dialog-box"></div>
+
+    <div id="walletModal" class="wallet-modal">
+        <div class="wallet-modal-content">
+            <div class="wallet-header">
+                <img src="https://lh3.googleusercontent.com/a/ACg8ocJ-T7aBq4A1E-jB3B-qJbV9A8c7vG6F5E4D3C2B1A=s96-c" alt="User" class="profile-pic">
+                <div class="user-info">
+                    <h3>Loading...</h3>
+                    <p>Loading...</p>
+                </div>
+            </div>
+            <div class="wallet-balance">
+                <p>Your Current Balance</p>
+                <div class="coins">
+                    <i class="fa-solid fa-coins"></i>
+                    <span>...</span>
+                </div>
+            </div>
+            <div class="wallet-tabs">
+                <button class="wallet-tab active" id="transactionTab">Transactions</button>
+                <button class="wallet-tab" id="withdrawalTab">Withdrawals</button>
+            </div>
+            <div id="transactionHistoryContent" class="history-content">
+                <ul class="history-list"></ul>
+            </div>
+            <div id="withdrawalHistoryContent" class="history-content">
+                 <ul class="history-list"></ul>
             </div>
         </div>
-        <div class="wallet-balance">
-            <p>Your Balance</p>
-            <div id="balance" class="coins"><i class="fas fa-coins"></i> ...</div>
+        <div class="wallet-footer">
+            <button class="btn">Withdraw Now</button>
         </div>
-        <div>
-            <button id="transactionTab" class="wallet-tab active">Transactions</button>
-            <button id="withdrawalTab" class="wallet-tab">Withdrawals</button>
-        </div>
-        <div id="transactionContent" class="history-list"></div>
-        <div id="withdrawalContent" class="history-list" style="display:none"></div>
     </div>
-</div>
 
-<footer>
-    <p>© 2025 Revenue Aditya</p>
-</footer>
+    <footer>
+        © 2025 Revenue Aditya. All Rights Reserved.
+    </footer>
 
-<script>
-const SUPABASE_URL = 'https://jwdbnlhdssnrchuvtwmy.supabase.co';
-const SUPABASE_KEY = 'your_anon_key_here';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <script>
+        // --- 1. SUPABASE CONNECTION INITIALIZATION ---
+        const SUPABASE_URL = 'https://jwbbbagarnqjvlvgkreg.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3YmJiYWdhcm5xanZsdmdrcmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTE1MzEsImV4cCI6MjA3MjAyNzUzMX0.ioRBwk2r08zDg8q5LzAakMFpPYdEHnOKSGJQkZSeb30';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-(async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
-    window.location.href = 'login.html';
-  }
-})();
+        // --- NEW: AUTHENTICATION CHECK ---
+        // यह फंक्शन तुरंत यह जांचने के लिए चलता है कि उपयोगकर्ता लॉग इन है या नहीं।
+        (async () => {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                // यदि कोई उपयोगकर्ता लॉग इन नहीं है, तो लॉगिन पेज पर रीडायरेक्ट करें।
+                // सुनिश्चित करें कि 'login.html' आपके लॉगिन पेज का सही पाथ है।
+                window.location.href = 'login.html';
+            }
+        })();
 
-const walletModal = document.getElementById('walletModal');
-const overlay = document.getElementById('overlay');
+        // --- 2. AUTHENTICATION LISTENER (UPDATED) ---
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+                console.log('User is signed in:', session.user);
+            } else if (event === 'SIGNED_OUT') {
+                console.log('User is signed out.');
+                // साइन आउट होने पर लॉगिन पेज पर रीडायरेक्ट करें
+                window.location.href = 'login.html';
+            }
+        });
 
-const transactionTab = document.getElementById('transactionTab');
-const withdrawalTab = document.getElementById('withdrawalTab');
+        // --- 3. ALL YOUR VARIABLES AND FUNCTIONS ---
+        const overlay = document.getElementById("overlay");
+        const codeModal = document.getElementById("codeModal");
+        const dialogBox = document.getElementById("dialog");
+        const walletModal = document.getElementById("walletModal");
 
-const transactionContent = document.getElementById('transactionContent');
-const withdrawalContent = document.getElementById('withdrawalContent');
+        function showCodeModal() {
+            overlay.classList.add("visible");
+            codeModal.style.display = "block";
+            document.getElementById("secretCode").value = "";
+        }
 
-transactionTab.addEventListener('click', () => {
-  transactionTab.classList.add('active');
-  withdrawalTab.classList.remove('active');
-  transactionContent.style.display = 'block';
-  withdrawalContent.style.display = 'none';
-});
+        function hideAllModals() {
+            overlay.classList.remove("visible");
+            codeModal.style.display = "none";
+            dialogBox.style.display = "none";
+            walletModal.style.display = "none";
+        }
 
-withdrawalTab.addEventListener('click', () => {
-  withdrawalTab.classList.add('active');
-  transactionTab.classList.remove('active');
-  withdrawalContent.style.display = 'block';
-  transactionContent.style.display = 'none';
-});
+        function showDialog(type, title, message) {
+            hideAllModals(); 
+            overlay.classList.add("visible");
+            dialogBox.innerHTML = `<h3 class="${type}">${title}</h3><p>${message}</p>`;
+            dialogBox.style.display = "block";
+            setTimeout(hideAllModals, 3000);
+        }
 
-async function openWallet() {
-  overlay.style.display = 'block';
-  walletModal.style.display = 'block';
+        function checkCode() {
+            const code = document.getElementById("secretCode").value.trim();
+            const correctCode = "Add5677";
+            const appUrl = "https://play.google.com/store/apps/details?id=com.phonepe.app";
+            if (code === correctCode) {
+                hideAllModals();
+                setTimeout(() => {
+                    showDialog("success", "✅ Code Verified", "Redirecting...");
+                    setTimeout(() => { window.location.href = appUrl; }, 2000); 
+                }, 200);
+            } else {
+                hideAllModals();
+                setTimeout(() => {
+                    showDialog("error", "❌ Invalid Code", "Incorrect code. Please try again.");
+                }, 200);
+            }
+        }
+        
+        document.getElementById('secretCode').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') { checkCode(); }
+        });
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if(user) {
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-    const { data: transactions } = await supabase.from('transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+        async function showWalletModal() {
+            overlay.classList.add("visible");
+            walletModal.style.display = "block";
+            document.querySelector('.wallet-header .user-info h3').textContent = 'Loading...';
+            document.querySelector('.wallet-header .user-info p').textContent = '...';
+            document.querySelector('.wallet-balance .coins span').textContent = '...';
+            const transactionList = document.querySelector('#transactionHistoryContent .history-list');
+            const withdrawalList = document.querySelector('#withdrawalHistoryContent .history-list');
+            transactionList.innerHTML = '<li class="history-empty">Loading...</li>';
+            withdrawalList.innerHTML = '<li class="history-empty">Loading...</li>';
 
-    document.getElementById('userName').innerText = profile.username || 'User';
-    document.getElementById('userEmail').innerText = profile.email || user.email;
-    document.getElementById('balance').innerText = profile.balance || 0;
+            const { data: { user } } = await supabaseClient.auth.getUser();
 
-    transactionContent.innerHTML = '';
-    transactions.forEach(tx => {
-      const el = document.createElement('div');
-      el.innerText = `${tx.description} ${tx.amount} (${tx.type})`;
-      transactionContent.appendChild(el);
-    });
+            if (user) {
+                const { data: profile } = await supabaseClient.from('profiles').select('username, balance, email').eq('id', user.id).single();
+                const { data: transactions } = await supabaseClient.from('transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
 
-    withdrawalContent.innerHTML = 'No Withdrawals';
-  }
-}
+                if (profile) {
+                    document.querySelector('.wallet-header .user-info h3').textContent = profile.username || 'New User';
+                    document.querySelector('.wallet-header .user-info p').textContent = profile.email;
+                    document.querySelector('.wallet-balance .coins span').textContent = profile.balance.toLocaleString();
+                }
 
-function closeWallet() {
-  overlay.style.display = 'none';
-  walletModal.style.display = 'none';
-}
+                transactionList.innerHTML = ''; 
+                withdrawalList.innerHTML = '';
+                let hasTransactions = false, hasWithdrawals = false;
 
-async function logoutUser() {
-  await supabase.auth.signOut();
-  window.location.href = 'login.html';
-}
+                if (transactions && transactions.length > 0) {
+                    transactions.forEach(tx => {
+                        const date = new Date(tx.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                        const item = `<li class="history-item"><div class="info"><div class="title">${tx.description}</div><div class="date">${date}</div></div><div class="amount ${tx.type === 'credit' ? 'credit' : 'debit'}">${tx.type === 'credit' ? '+' : '-'} ${tx.amount}</div></li>`;
+                        if(tx.type === 'credit'){ transactionList.innerHTML += item; hasTransactions = true; } 
+                        else { withdrawalList.innerHTML += item; hasWithdrawals = true; }
+                    });
+                }
+                
+                if (!hasTransactions) transactionList.innerHTML = '<li class="history-empty">No transactions yet.</li>';
+                if (!hasWithdrawals) withdrawalList.innerHTML = '<li class="history-empty">No withdrawal history yet.</li>';
+            } else {
+                // यह हिस्सा अब नहीं चलेगा क्योंकि उपयोगकर्ता पहले ही रीडायरेक्ट हो जाएगा, 
+                // लेकिन इसे रखना सुरक्षित है।
+                document.querySelector('.wallet-header .user-info h3').textContent = 'Guest User';
+                document.querySelector('.wallet-balance .coins span').textContent = '0';
+                transactionList.innerHTML = '<li class="history-empty">Please log in.</li>';
+                withdrawalList.innerHTML = '<li class="history-empty">Please log in.</li>';
+            }
+        }
+        
+        const transactionTab = document.getElementById('transactionTab');
+        const withdrawalTab = document.getElementById('withdrawalTab');
+        const transactionContent = document.getElementById('transactionHistoryContent');
+        const withdrawalContent = document.getElementById('withdrawalHistoryContent');
 
-</script>
+        transactionTab.addEventListener('click', () => {
+            transactionTab.classList.add('active');
+            withdrawalTab.classList.remove('active');
+            transactionContent.style.display = 'block';
+            withdrawalContent.style.display = 'none';
+        });
 
+        withdrawalTab.addEventListener('click', () => {
+            withdrawalTab.classList.add('active');
+            transactionTab.classList.remove('active');
+            withdrawalContent.style.display = 'block';
+            transactionContent.style.display = 'none';
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const siteHeader = document.getElementById('siteHeader');
+            const cancelSearchBtn = document.getElementById('cancelSearchBtn');
+            const allCards = document.querySelectorAll('.card');
+            const searchIcon = document.getElementById('searchIcon');
+            const noResultsMessage = document.getElementById('noResultsMessage');
+
+            const filterCards = () => {
+                const query = searchInput.value.toLowerCase().trim();
+                let resultsFound = false;
+                allCards.forEach(card => {
+                    const cardText = card.textContent.toLowerCase();
+                    if (cardText.includes(query)) {
+                        card.style.display = 'flex';
+                        resultsFound = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                noResultsMessage.style.display = resultsFound ? 'none' : 'block';
+            };
+
+            const enterSearchMode = () => { siteHeader.classList.add('search-active'); if (window.innerWidth < 640) { searchInput.focus(); } };
+            const exitSearchMode = () => { siteHeader.classList.remove('search-active'); searchInput.value = ''; filterCards(); searchInput.blur(); };
+            
+            window.addEventListener('scroll', () => {
+                if(document.body.classList.contains('search-active')) return;
+                if (window.scrollY > 50) siteHeader.classList.add('scrolled');
+                else siteHeader.classList.remove('scrolled');
+            });
+
+            searchIcon.addEventListener('click', (e) => {
+                if(siteHeader.classList.contains('scrolled') && !siteHeader.classList.contains('search-active')) {
+                    e.stopPropagation();
+                    enterSearchMode();
+                    searchInput.style.display = 'block';
+                    searchInput.focus();
+                }
+            });
+
+            searchInput.addEventListener('input', filterCards);
+            searchInput.addEventListener('focus', enterSearchMode);
+            cancelSearchBtn.addEventListener('click', exitSearchMode);
+        });
+    </script>
 </body>
 </html>
